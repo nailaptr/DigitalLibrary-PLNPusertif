@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from '@inertiajs/react';
 import logoPLN from '../assets/logo-pln-fix.png';
 import {
   LayoutDashboard,
@@ -29,9 +30,9 @@ export default function Sidebar({ activeItem = 'Overview', onSelectMenu }) {
     {
       group: 'Manajemen Konten',
       items: [
-        { name: 'Dokumen', icon: FileText, path: '#' },
-        { name: 'Sertifikat', icon: Award, path: '#' },
-        { name: 'Standar', icon: Layers, path: '#' },
+        { name: 'Dokumen', icon: FileText, path: route ? route('documents.index') : '/documents' },
+        { name: 'Sertifikat', icon: Award, path: route ? route('certificates.index') : '/certificates' },
+        { name: 'Standar', icon: Layers, path: route ? route('standards.index') : '/standards' },
         { name: 'Status Dokumen', icon: FileCheck, path: '#' },
         { name: 'FAQ', icon: HelpCircle, path: '#' },
       ],
@@ -137,11 +138,10 @@ export default function Sidebar({ activeItem = 'Overview', onSelectMenu }) {
                   const Icon = item.icon;
                   const isActive = activeItem === item.name;
                   return (
-                    <a
+                    <Link
                       key={item.name}
                       href={item.path}
                       onClick={(e) => {
-                        e.preventDefault();
                         if (onSelectMenu) onSelectMenu(item.name);
                       }}
                       className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-150 group relative ${
@@ -161,7 +161,7 @@ export default function Sidebar({ activeItem = 'Overview', onSelectMenu }) {
                         }`}
                       />
                       {!collapsed && <span>{item.name}</span>}
-                    </a>
+                    </Link>
                   );
                 })}
               </div>

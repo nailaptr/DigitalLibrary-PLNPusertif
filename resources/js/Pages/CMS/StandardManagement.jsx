@@ -1,115 +1,24 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import React, { useState } from 'react';
+import { router } from '@inertiajs/react';
 import Sidebar from '@/Components/Sidebar';
 import StandardCardGrid from '@/Components/Standard/StandardCardGrid';
 import StandardModal from '@/Components/Standard/StandardModal';
 import DocumentTable from '@/Components/Standard/DocumentTable';
 import DocumentModal from '@/Components/Standard/DocumentModal';
 
-export default function StandardManagement({ onNavigate }) {
+export default function StandardManagement({ onNavigate, initialStandards = [] }) {
   const [activeMenu, setActiveMenu] = useState('Standar');
 
   // Navigation Level State: 'level1' (Standard Cards) | 'level2' (Document Table)
   const [level, setLevel] = useState('level1');
   const [selectedStandard, setSelectedStandard] = useState(null);
 
-  // Mock Standards List
-  const [standards, setStandards] = useState([
-    {
-      id: 'std-1',
-      name: 'ISO 9001:2015',
-      description: 'Sistem Manajemen Mutu standar internasional untuk sertifikasi PLN Pusertif.',
-      docCount: 25,
-      publishCount: 10,
-      createdAt: '14 November 2025, 14:59 PM',
-      updatedAt: '17 November 2025, 14:59 PM',
-    },
-    {
-      id: 'std-2',
-      name: 'ISO 14001:2015',
-      description: 'Sistem Manajemen Lingkungan untuk operasional dan fasilitas penerbitan sertifikat.',
-      docCount: 25,
-      publishCount: 8,
-      createdAt: '12 November 2025, 10:00 AM',
-      updatedAt: '16 November 2025, 11:20 AM',
-    },
-    {
-      id: 'std-3',
-      name: 'ISO 45001:2018',
-      description: 'Sistem Manajemen Keselamatan dan Kesehatan Kerja (K3) industri ketenagalistrikan.',
-      docCount: 25,
-      publishCount: 12,
-      createdAt: '10 November 2025, 08:30 AM',
-      updatedAt: '15 November 2025, 09:15 AM',
-    },
-    {
-      id: 'std-4',
-      name: 'ISO Lainnya',
-      description: 'Kelompok standar teknis khusus, ISO 27001, ISO 17025, dan kualifikasi mutu tambahan.',
-      docCount: 25,
-      publishCount: 5,
-      createdAt: '08 November 2025, 13:45 PM',
-      updatedAt: '12 November 2025, 16:30 PM',
-    },
-  ]);
+  // Use props instead of mock data
+  const standards = initialStandards;
 
-  // Mock Documents List (for Level 2)
-  const [documents, setDocuments] = useState([
-    {
-      id: 'doc-1',
-      code: 'DOC-ISO-9001-01',
-      title: 'Prosedur Sertifikasi Produk Kabel PLN',
-      jenis: 'Prosedur',
-      bidang: 'Bidang A',
-      status: 'Draft',
-      updatedAt: '21/11/2025, 09:41 AM',
-    },
-    {
-      id: 'doc-2',
-      code: 'DOC-ISO-9001-02',
-      title: 'Manual Mutu Laboratorium Pusertif',
-      jenis: 'Manual',
-      bidang: 'Bidang B',
-      status: 'Relevan',
-      updatedAt: '20/11/2025, 14:15 PM',
-    },
-    {
-      id: 'doc-3',
-      code: 'DOC-ISO-9001-03',
-      title: 'Instruksi Kerja Pengujian Trafo Distribusi',
-      jenis: 'Instruksi Kerja',
-      bidang: 'Bidang C',
-      status: 'Revisi',
-      updatedAt: '19/11/2025, 11:30 AM',
-    },
-    {
-      id: 'doc-4',
-      code: 'DOC-ISO-9001-04',
-      title: 'Formulir Audit Internal Sistem Mutu',
-      jenis: 'Formulir',
-      bidang: 'Bidang D',
-      status: 'Tidak Relevan',
-      updatedAt: '18/11/2025, 16:20 PM',
-    },
-    {
-      id: 'doc-5',
-      code: 'DOC-ISO-9001-05',
-      title: 'Prosedur Kalibrasi Alat Ukur Listrik',
-      jenis: 'Prosedur',
-      bidang: 'Bidang A',
-      status: 'Relevan',
-      updatedAt: '17/11/2025, 08:45 AM',
-    },
-    {
-      id: 'doc-6',
-      code: 'DOC-ISO-9001-06',
-      title: 'Manual Keselamatan Operasional PLN',
-      jenis: 'Manual',
-      bidang: 'Bidang B',
-      status: 'Draft',
-      updatedAt: '16/11/2025, 13:10 PM',
-    },
-  ]);
+  // Mock Documents List (for Level 2 - will be implemented later)
+  const [documents, setDocuments] = useState([]);
 
   // Standard Modal States (Level 1)
   const [standardModalOpen, setStandardModalOpen] = useState(false);
@@ -136,26 +45,19 @@ export default function StandardManagement({ onNavigate }) {
 
   const handleSaveStandard = (stdData) => {
     if (standardModalMode === 'add') {
-      const newStd = {
-        ...stdData,
-        id: `std-${Date.now()}`,
-        docCount: 0,
-        publishCount: 0,
-        createdAt: '17 November 2025, 15:00 PM',
-        updatedAt: '17 November 2025, 15:00 PM',
-      };
-      setStandards((prev) => [newStd, ...prev]);
+      router.post(route('standards.store'), stdData, {
+        onSuccess: () => setStandardModalOpen(false),
+      });
     } else {
-      setStandards((prev) =>
-        prev.map((s) => (s.id === stdData.id ? { ...s, ...stdData, updatedAt: '17 November 2025, 15:30 PM' } : s))
-      );
+      router.put(route('standards.update', stdData.id), stdData, {
+        onSuccess: () => setStandardModalOpen(false),
+      });
     }
-    setStandardModalOpen(false);
   };
 
   const handleDeleteStandard = (std) => {
     if (confirm(`Apakah Anda yakin ingin menghapus standar "${std.name}"?`)) {
-      setStandards((prev) => prev.filter((s) => s.id !== std.id));
+      router.delete(route('standards.destroy', std.id));
     }
   };
 

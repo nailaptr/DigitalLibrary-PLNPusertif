@@ -1,154 +1,21 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import React, { useState } from 'react';
+import { router } from '@inertiajs/react';
 import Sidebar from '@/Components/Sidebar';
 import DocumentList from '@/Components/Document/DocumentList';
 import DocumentForm from '@/Components/Document/DocumentForm';
 import DocumentDetail from '@/Components/Document/DocumentDetail';
 
-export default function DocumentManagement({ onNavigate }) {
+export default function DocumentManagement({ onNavigate, initialDocuments = [], initialStandards = [] }) {
   const [activeMenu, setActiveMenu] = useState('Dokumen');
 
   // Navigation Level State: 'level1' (Document List) | 'level2_add' | 'level2_edit' | 'level3_detail'
   const [level, setLevel] = useState('level1');
   const [selectedDoc, setSelectedDoc] = useState(null);
 
-  // Mock Standards List for quick summary and dropdowns
-  const [standards] = useState([
-    { id: 'std-1', name: 'ISO 9001:2015', description: 'Sistem Manajemen Mutu PLN Pusertif.', docCount: 25 },
-    { id: 'std-2', name: 'ISO 14001:2015', description: 'Sistem Manajemen Lingkungan fasilitas penerbitan.', docCount: 25 },
-    { id: 'std-3', name: 'ISO 45001:2018', description: 'Sistem Manajemen K3 industri ketenagalistrikan.', docCount: 25 },
-    { id: 'std-4', name: 'ISO Lainnya', description: 'Standar teknis khusus & akreditasi laboratorium.', docCount: 25 },
-  ]);
-
-  // Mock Documents State
-  const [documents, setDocuments] = useState([
-    {
-      id: 'doc-101',
-      code: 'DOC-2025-001',
-      title: 'Prosedur Sertifikasi Produk Kabel PLN',
-      jenis: 'Prosedur',
-      bidang: 'Bidang A',
-      status: 'Draft',
-      uploadDate: '2025-11-21',
-      updatedAt: '21/11/2025, 09:41 AM',
-      fileName: 'Prosedur_Sertifikasi_Kabel_PLN.pdf',
-      fileSize: '4.2 MB',
-      sdgRelations: [
-        {
-          id: 'sdg-1',
-          standard: 'ISO 9001:2015',
-          clause: 'Klausul 4: Konteks Organisasi',
-          subClause: 'Sub 4.1: Memahami Organisasi & Konteksnya',
-          isPrimary: true,
-        },
-        {
-          id: 'sdg-2',
-          standard: 'ISO 14001:2015',
-          clause: 'Klausul 8: Operasional',
-          subClause: 'Sub 8.1: Perencanaan & Pengendalian Operasional',
-          isPrimary: false,
-        },
-      ],
-    },
-    {
-      id: 'doc-102',
-      code: 'DOC-2025-002',
-      title: 'Manual Mutu Laboratorium Pusertif',
-      jenis: 'Manual',
-      bidang: 'Bidang B',
-      status: 'Relevan',
-      uploadDate: '2025-11-20',
-      updatedAt: '20/11/2025, 14:15 PM',
-      fileName: 'Manual_Mutu_Laboratorium.pdf',
-      fileSize: '8.5 MB',
-      reviewData: {
-        reviewerWho: 'Jane Smith (Senior Auditor PLN)',
-        reviewerWhen: '20/11/2025',
-        reviewResult: 'Relevan',
-        reviewStatus: 'Relevan',
-        reviewNotes: 'Dokumen lengkap dan telah terakreditasi KAN sesuai ISO 17025 & ISO 9001.',
-      },
-      sdgRelations: [
-        {
-          id: 'sdg-1',
-          standard: 'ISO 9001:2015',
-          clause: 'Klausul 5: Kepemimpinan',
-          subClause: 'Sub 5.1: Kepemimpinan & Komitmen',
-          isPrimary: true,
-        },
-      ],
-    },
-    {
-      id: 'doc-103',
-      code: 'DOC-2025-003',
-      title: 'Instruksi Kerja Pengujian Trafo Distribusi',
-      jenis: 'Instruksi Kerja',
-      bidang: 'Bidang C',
-      status: 'Revisi',
-      uploadDate: '2025-11-19',
-      updatedAt: '19/11/2025, 11:30 AM',
-      fileName: 'IK_Pengujian_Trafo.pdf',
-      fileSize: '3.1 MB',
-      reviewData: {
-        reviewerWho: 'Budi Santoso (Manajer Mutu)',
-        reviewerWhen: '19/11/2025',
-        reviewResult: 'Revisi',
-        reviewStatus: 'Revisi',
-        reviewNotes: 'Perlu pembaruan toleransi suhu batas uji sesuai standar SPLN terbaru.',
-      },
-      sdgRelations: [
-        {
-          id: 'sdg-1',
-          standard: 'ISO 45001:2018',
-          clause: 'Klausul 6: Perencanaan',
-          subClause: 'Sub 6.1: Tindakan Mengatasi Risiko',
-          isPrimary: true,
-        },
-      ],
-    },
-    {
-      id: 'doc-104',
-      code: 'DOC-2025-004',
-      title: 'Formulir Audit Internal Sistem Mutu',
-      jenis: 'Formulir',
-      bidang: 'Bidang D',
-      status: 'Tidak Relevan',
-      uploadDate: '2025-11-18',
-      updatedAt: '18/11/2025, 16:20 PM',
-      fileName: 'Formulir_Audit_Internal.pdf',
-      fileSize: '1.8 MB',
-      sdgRelations: [
-        {
-          id: 'sdg-1',
-          standard: 'ISO Lainnya',
-          clause: 'Klausul 7: Dukungan',
-          subClause: 'Sub 7.5: Informasi Terdokumentasi',
-          isPrimary: true,
-        },
-      ],
-    },
-    {
-      id: 'doc-105',
-      code: 'DOC-2025-005',
-      title: 'Prosedur Kalibrasi Alat Ukur Listrik',
-      jenis: 'Prosedur',
-      bidang: 'Bidang A',
-      status: 'Pending',
-      uploadDate: '2025-11-17',
-      updatedAt: '17/11/2025, 08:45 AM',
-      fileName: 'Prosedur_Kalibrasi_Alat_Ukur.pdf',
-      fileSize: '5.4 MB',
-      sdgRelations: [
-        {
-          id: 'sdg-1',
-          standard: 'ISO 9001:2015',
-          clause: 'Klausul 8: Operasional',
-          subClause: 'Sub 8.1: Perencanaan & Pengendalian Operasional',
-          isPrimary: true,
-        },
-      ],
-    },
-  ]);
+  // Use props instead of mock data
+  const standards = initialStandards;
+  const documents = initialDocuments;
 
   // Handlers
   const handleNavigateAddDoc = () => {
@@ -167,20 +34,35 @@ export default function DocumentManagement({ onNavigate }) {
   };
 
   const handleSaveDocFromForm = (docData) => {
-    if (level === 'level2_add') {
-      const newDoc = {
-        ...docData,
-        id: `doc-${Date.now()}`,
-        code: `DOC-2025-00${documents.length + 1}`,
-      };
-      setDocuments((prev) => [newDoc, ...prev]);
-    } else if (level === 'level2_edit') {
-      setDocuments((prev) =>
-        prev.map((d) => (d.id === docData.id ? { ...d, ...docData } : d))
-      );
+    // We need to use FormData since we are uploading a file
+    const formData = new FormData();
+    for (const key in docData) {
+      if (docData[key] !== null && docData[key] !== undefined) {
+        if (key === 'standard_ids') {
+          docData[key].forEach(id => formData.append('standard_ids[]', id));
+        } else {
+          formData.append(key, docData[key]);
+        }
+      }
     }
-    setLevel('level1');
-    setSelectedDoc(null);
+
+    if (level === 'level2_add') {
+      router.post(route('documents.store'), formData, {
+        onSuccess: () => {
+          setLevel('level1');
+          setSelectedDoc(null);
+        },
+      });
+    } else if (level === 'level2_edit') {
+      // For PUT requests with file uploads in Laravel, we need to send POST with _method=PUT
+      formData.append('_method', 'PUT');
+      router.post(route('documents.update', docData.id), formData, {
+        onSuccess: () => {
+          setLevel('level1');
+          setSelectedDoc(null);
+        },
+      });
+    }
   };
 
   const handleSaveReview = (docId, reviewData) => {
@@ -230,13 +112,14 @@ export default function DocumentManagement({ onNavigate }) {
 
   const handleDeleteDoc = (docId) => {
     if (confirm('Apakah Anda yakin ingin menghapus dokumen ini?')) {
-      setDocuments((prev) => prev.filter((d) => d.id !== docId));
+      router.delete(route('documents.destroy', docId));
     }
   };
 
   const handleBulkDeleteDocs = (ids) => {
     if (confirm(`Apakah Anda yakin ingin menghapus ${ids.length} dokumen yang dipilih?`)) {
-      setDocuments((prev) => prev.filter((d) => !ids.includes(d.id)));
+      // For simplicity in Tahap 1, we delete one by one or create a bulk route later.
+      ids.forEach(id => router.delete(route('documents.destroy', id)));
     }
   };
 
