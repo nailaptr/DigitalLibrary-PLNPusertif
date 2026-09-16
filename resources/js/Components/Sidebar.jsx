@@ -12,7 +12,9 @@ import {
   Settings,
   ChevronRight,
   Menu,
-  X
+  X,
+  BarChart2,
+  History
 } from 'lucide-react';
 
 export default function Sidebar({ activeItem = 'Overview', onSelectMenu }) {
@@ -24,6 +26,7 @@ export default function Sidebar({ activeItem = 'Overview', onSelectMenu }) {
       group: 'Dashboard',
       items: [
         { name: 'Overview', icon: LayoutDashboard, path: '#' },
+        { name: 'Laporan & Statistik', icon: BarChart2, path: route ? route('reports.index') : '/reports' },
         { name: 'Manajemen User', icon: Users, path: '#' },
       ],
     },
@@ -33,8 +36,7 @@ export default function Sidebar({ activeItem = 'Overview', onSelectMenu }) {
         { name: 'Dokumen', icon: FileText, path: route ? route('documents.index') : '/documents' },
         { name: 'Sertifikat', icon: Award, path: route ? route('certificates.index') : '/certificates' },
         { name: 'Standar', icon: Layers, path: route ? route('standards.index') : '/standards' },
-        { name: 'Status Dokumen', icon: FileCheck, path: '#' },
-        { name: 'FAQ', icon: HelpCircle, path: '#' },
+        { name: 'Log Aktivitas', icon: History, path: route ? route('activity_logs.index') : '/activity-logs' },
       ],
     },
   ];

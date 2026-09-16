@@ -9,7 +9,7 @@ import {
   Building2
 } from 'lucide-react';
 
-export default function LandingDashboard({ onNavigateToOverview, onNavigateToCertificates, onNavigateToStandards }) {
+export default function LandingDashboard({ onNavigateToOverview, onNavigateToCertificates, onNavigateToStandards, stats = { standardCount: 0, certificateCount: 0, documentCount: 0 } }) {
   const [currentSlide, setCurrentSlide] = useState(0);
 
   const heroSlides = [
@@ -88,7 +88,7 @@ export default function LandingDashboard({ onNavigateToOverview, onNavigateToCer
                 <FileText className="w-6 h-6 text-[#FFE600]" />
               </div>
               <span className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
-                1,240
+                {new Intl.NumberFormat('id-ID').format(stats.standardCount)}
               </span>
               <span className="text-xs font-medium text-blue-100 mt-1">
                 Jumlah Standar
@@ -101,20 +101,20 @@ export default function LandingDashboard({ onNavigateToOverview, onNavigateToCer
                 <Award className="w-6 h-6 text-[#FFE600]" />
               </div>
               <span className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
-                45
+                {new Intl.NumberFormat('id-ID').format(stats.certificateCount)}
               </span>
               <span className="text-xs font-medium text-blue-100 mt-1">
                 Jumlah Sertifikat
               </span>
             </div>
 
-            {/* Card 3: Icon Standard + Summary metric (2,431 Total Dokumen Audit) */}
+            {/* Card 3: Icon Standard + Summary metric (Total Dokumen Audit) */}
             <div className="bg-white/15 backdrop-blur-md border border-white/20 rounded-2xl p-5 flex flex-col items-center justify-center text-center hover:bg-white/25 transition-all transform hover:-translate-y-1">
               <div className="w-12 h-12 rounded-full bg-[#00A3E0]/30 border border-white/20 flex items-center justify-center mb-3">
                 <BarChart3 className="w-6 h-6 text-[#FFE600]" />
               </div>
               <span className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
-                2,431
+                {new Intl.NumberFormat('id-ID').format(stats.documentCount)}
               </span>
               <span className="text-xs font-medium text-blue-100 mt-1">
                 Total Dokumen Audit

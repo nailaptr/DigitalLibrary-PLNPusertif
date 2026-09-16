@@ -11,115 +11,12 @@ import {
 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
-export default function SertifikatPage() {
+export default function SertifikatPage({ certificateList = [] }) {
   const { t } = useTranslation();
   const [selectedCert, setSelectedCert] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [activePage, setActivePage] = useState(1);
   const [isFilterOpen, setIsFilterOpen] = useState(false);
-
-  // Certificate Items
-  const certificateList = [
-    {
-      id: 1,
-      title: 'Host Performed Customer Satisfaction Survey of PT PLN (Persero) Pusertif',
-      recipient: 'EKO PRIYANTO',
-      nip: '9514027B2V',
-      issuer: 'PT PLN (Persero) Pusat Sertifikasi (Pusertif)',
-      date: 'August 21, 2024',
-      category: 'ISO 9001:2015',
-      image: '/images/piagam_detail.png',
-      remarks: 'Certificate awarded for outstanding performance and customer satisfaction audit compliance in 2024.',
-    },
-    {
-      id: 2,
-      title: 'Sertifikasi Audit Sistem Manajemen Lingkungan Pembangkitan Energi',
-      recipient: 'EKO PRIYANTO',
-      nip: '9514027B2V',
-      issuer: 'PT PLN (Persero) Pusat Sertifikasi (Pusertif)',
-      date: 'August 15, 2024',
-      category: 'ISO 14001:2015',
-      image: '/images/cert_thumb.png',
-      remarks: 'Kepatuhan standar mutu pengelolaan dampak lingkungan operasional PLN.',
-    },
-    {
-      id: 3,
-      title: 'Sertifikasi Kepatuhan Keselamatan & Kesehatan Kerja K3 Transmisi',
-      recipient: 'EKO PRIYANTO',
-      nip: '9514027B2V',
-      issuer: 'PT PLN (Persero) Pusat Sertifikasi (Pusertif)',
-      date: 'July 28, 2024',
-      category: 'ISO 45001:2018',
-      image: '/images/piagam_detail.png',
-      remarks: 'Verifikasi kepatuhan penerapan standar K3 pada gardu induk tegangan tinggi.',
-    },
-    {
-      id: 4,
-      title: 'Penjaminan Mutu Kalibrasi Alat Ukur Listrik & Instrumentasi Digital',
-      recipient: 'EKO PRIYANTO',
-      nip: '9514027B2V',
-      issuer: 'PT PLN (Persero) Pusat Sertifikasi (Pusertif)',
-      date: 'June 10, 2024',
-      category: 'ISO 9001:2015',
-      image: '/images/cert_thumb.png',
-      remarks: 'Sertifikasi keandalan presisi pengukuran alat ukur laboratorium Pusertif.',
-    },
-    {
-      id: 5,
-      title: 'Piagam Penghargaan Standarisasi Produk Peralatan Ketenagalistrikan',
-      recipient: 'EKO PRIYANTO',
-      nip: '9514027B2V',
-      issuer: 'PT PLN (Persero) Pusat Sertifikasi (Pusertif)',
-      date: 'May 19, 2024',
-      category: 'SPLN S5.001',
-      image: '/images/piagam_detail.png',
-      remarks: 'Penghargaan kontribusi pengujian standar mutu produk meter transaksi listrik.',
-    },
-    {
-      id: 6,
-      title: 'Host Performed Audit System Assessment for Substation Reliability',
-      recipient: 'EKO PRIYANTO',
-      nip: '9514027B2V',
-      issuer: 'PT PLN (Persero) Pusat Sertifikasi (Pusertif)',
-      date: 'April 04, 2024',
-      category: 'ISO 9001:2015',
-      image: '/images/cert_thumb.png',
-      remarks: 'Sertifikasi sistem manajemen mutu evaluasi keandalan penyaluran energi.',
-    },
-    {
-      id: 7,
-      title: 'Verifikasi Akreditasi Laboratorium Pengujian Tegangan Tinggi Pusertif',
-      recipient: 'EKO PRIYANTO',
-      nip: '9514027B2V',
-      issuer: 'PT PLN (Persero) Pusat Sertifikasi (Pusertif)',
-      date: 'March 22, 2024',
-      category: 'ISO/IEC 17025',
-      image: '/images/piagam_detail.png',
-      remarks: 'Sertifikat kompetensi laboratorium pengujian & kalibrasi independen nasional.',
-    },
-    {
-      id: 8,
-      title: 'Audit Sistem Manajemen Energi Berkelanjutan & Emisi Karbon Rendah',
-      recipient: 'EKO PRIYANTO',
-      nip: '9514027B2V',
-      issuer: 'PT PLN (Persero) Pusat Sertifikasi (Pusertif)',
-      date: 'February 14, 2024',
-      category: 'ISO 5001:2018',
-      image: '/images/cert_thumb.png',
-      remarks: 'Penilaian efisiensi pemanfaatan energi dan konservasi daya di unit PLN.',
-    },
-    {
-      id: 9,
-      title: 'Sertifikat Keandalan Manajemen Risiko & Keamanan Informasi Audit',
-      recipient: 'EKO PRIYANTO',
-      nip: '9514027B2V',
-      issuer: 'PT PLN (Persero) Pusat Sertifikasi (Pusertif)',
-      date: 'January 09, 2024',
-      category: 'ISO 27001:2022',
-      image: '/images/piagam_detail.png',
-      remarks: 'Sertifikasi perlindungan keamanan data audit dan dokumen sertifikasi resmi.',
-    },
-  ];
 
   // Filter implementation
   const filteredCerts = certificateList.filter(

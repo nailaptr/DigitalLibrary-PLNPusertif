@@ -2,42 +2,7 @@ import PublicLayout from '@/Layouts/PublicLayout';
 import React from 'react';
 import { BookOpen, Shield, Sparkles, CheckCircle } from 'lucide-react';
 
-export default function StandarPage() {
-  const standardsList = [
-    {
-      code: 'ISO 9001:2015',
-      title: 'Sistem Manajemen Mutu (Quality Management System)',
-      desc: 'Panduan utama pengelolaan standar kualitas operasional, pengujian komponen, dan kepuasan pelanggan di seluruh instalasi PLN.',
-      tag: 'ISO MUTU',
-      tagColor: 'bg-[#1E40AF]',
-      docsCount: '1.242 Dokumen'
-    },
-    {
-      code: 'ISO 14001:2015',
-      title: 'Sistem Manajemen Lingkungan (Environmental Management)',
-      desc: 'Tolok ukur pengelolaan keberlanjutan ekosistem, emisi rendah karbon, dan penanganan limbah operasional ketenagalistrikan.',
-      tag: 'ISO LINGKUNGAN',
-      tagColor: 'bg-[#10B981]',
-      docsCount: '830 Dokumen'
-    },
-    {
-      code: 'ISO 45001:2018',
-      title: 'Sistem Manajemen K3 (Safety & Occupational Health)',
-      desc: 'Kerangka kerja perlindungan keselamatan teknisi dan pekerja dalam pemeliharaan jaringan transmisi tegangan tinggi & pembangkitan.',
-      tag: 'ISO K3 SAFETY',
-      tagColor: 'bg-[#D9252A]',
-      docsCount: '759 Dokumen'
-    },
-    {
-      code: 'SPLN S5.001:2023',
-      title: 'Standar PLN Spesifikasi Meter Transaksi Listrik Digital',
-      desc: 'Spesifikasi teknis resmi untuk perangkat pengukuran dan kalibrasi transmisi energi listrik terintegrasi.',
-      tag: 'SPLN LOKAL',
-      tagColor: 'bg-[#00A3E0]',
-      docsCount: '145 Dokumen'
-    }
-  ];
-
+export default function StandarPage({ standardsList = [] }) {
   return (
     <PublicLayout>
 

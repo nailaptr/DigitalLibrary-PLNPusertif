@@ -12,7 +12,7 @@ import { Link } from '@inertiajs/react';
 import { useTranslation } from 'react-i18next';
 import Footer from '@/Components/Footer';
 
-export default function MainDashboard() {
+export default function MainDashboard({ stats = { standardCount: 0, certificateCount: 0, documentCount: 0 } }) {
   const [currentSlide, setCurrentSlide] = useState(0);
   const { t } = useTranslation();
 
@@ -91,7 +91,7 @@ export default function MainDashboard() {
                   <FileText className="w-6 h-6 text-[#FFE600]" />
                 </div>
                 <span className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
-                  1,240
+                  {new Intl.NumberFormat('id-ID').format(stats.standardCount)}
                 </span>
                 <span className="text-xs font-medium text-blue-100 mt-1">
                   {t('home.statStandards')}
@@ -103,7 +103,7 @@ export default function MainDashboard() {
                   <Award className="w-6 h-6 text-[#FFE600]" />
                 </div>
                 <span className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
-                  45
+                  {new Intl.NumberFormat('id-ID').format(stats.certificateCount)}
                 </span>
                 <span className="text-xs font-medium text-blue-100 mt-1">
                   {t('home.statCertificates')}
@@ -115,7 +115,7 @@ export default function MainDashboard() {
                   <BarChart3 className="w-6 h-6 text-[#FFE600]" />
                 </div>
                 <span className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
-                  2,431
+                  {new Intl.NumberFormat('id-ID').format(stats.documentCount)}
                 </span>
                 <span className="text-xs font-medium text-blue-100 mt-1">
                   {t('home.statAuditDocs')}
