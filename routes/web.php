@@ -10,11 +10,12 @@ use App\Http\Controllers\PublicController;
 Route::get('/', [PublicController::class, 'landing'])->name('public.landing');
 Route::get('/overview', [PublicController::class, 'overview'])->name('public.overview');
 Route::get('/standar', [PublicController::class, 'standards'])->name('public.standards');
+Route::get('/standar/{id}', [PublicController::class, 'showStandard'])->name('public.standards.show');
 Route::get('/sertifikat', [PublicController::class, 'certificates'])->name('public.certificates');
+Route::get('/dokumen', [PublicController::class, 'documents'])->name('public.documents');
 
-Route::get('/dashboard', function () {
-    return redirect()->route('documents.index');
-})->middleware(['auth', 'verified', 'permission:view dashboard'])->name('dashboard');
+Route::get('/dashboard', [\App\Http\Controllers\DashboardController::class, 'index'])
+    ->middleware(['auth', 'verified', 'permission:view dashboard'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -22,13 +23,25 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     // CMS Routes
-    Route::resource('standards', App\Http\Controllers\StandardController::class)->except(['create', 'show', 'edit']);
-    Route::resource('documents', App\Http\Controllers\DocumentController::class)->except(['create', 'show', 'edit']);
-    Route::resource('certificates', App\Http\Controllers\CertificateController::class)->except(['create', 'show', 'edit']);
+    Route::resource('standards', App\Http\Controllers\StandardController::class)
+        ->except(['create', 'show', 'edit'])
+        ->middleware('permission:manage standards');
+        
+    Route::resource('documents', App\Http\Controllers\DocumentController::class)
+        ->except(['create', 'show', 'edit'])
+        ->middleware('permission:manage documents');
+        
+    Route::resource('certificates', App\Http\Controllers\CertificateController::class)
+        ->except(['create', 'show', 'edit'])
+        ->middleware('permission:manage certificates');
 
     Route::get('/reports', [App\Http\Controllers\ReportController::class, 'index'])
         ->middleware('permission:view statistics')
         ->name('reports.index');
+
+    Route::resource('users', App\Http\Controllers\UserController::class)
+        ->except(['create', 'show', 'edit'])
+        ->middleware('permission:manage users');
 
     Route::get('/activity-logs', [App\Http\Controllers\ActivityLogController::class, 'index'])
         ->middleware('permission:view activity log')

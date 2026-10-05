@@ -3,118 +3,15 @@ import React, { useState } from 'react';
 import { router } from '@inertiajs/react';
 import { CheckCircle, Search, SlidersHorizontal } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import Footer from '@/Components/Footer';
 
-export default function StandarView() {
+
+export default function StandarView({ standardsList = [] }) {
   const navigate = (url) => router.visit(url);
   const { t } = useTranslation();
   const [searchTerm, setSearchTerm] = useState('');
   const [isFilterOpen, setIsFilterOpen] = useState(false);
 
-  // 9 ISO Cards items for 3x3 Grid
-  const isoStandards = [
-    {
-      id: 'iso-9001-2015',
-      code: '9001:2015',
-      title: 'ISO 9001:2015',
-      category: 'Quality Management System',
-      totalDoc: '1,242',
-      manual: '12',
-      prosedur: '85',
-      instruksiKerja: '210',
-      formulir: '935',
-    },
-    {
-      id: 'iso-14001-2015',
-      code: '14001:2015',
-      title: 'ISO 14001:2015',
-      category: 'Environmental Management System',
-      totalDoc: '1,242',
-      manual: '12',
-      prosedur: '85',
-      instruksiKerja: '210',
-      formulir: '935',
-    },
-    {
-      id: 'iso-45001-2018',
-      code: '45001:2018',
-      title: 'ISO 45001:2018',
-      category: 'Safety & Health Management System',
-      totalDoc: '1,242',
-      manual: '12',
-      prosedur: '85',
-      instruksiKerja: '210',
-      formulir: '935',
-    },
-    {
-      id: 'iso-9001-2015-lab',
-      code: '9001:2015',
-      title: 'ISO 9001:2015 (Calibration)',
-      category: 'Quality Management Laboratorium',
-      totalDoc: '1,242',
-      manual: '12',
-      prosedur: '85',
-      instruksiKerja: '210',
-      formulir: '935',
-    },
-    {
-      id: 'iso-17025-2017',
-      code: '17025:2017',
-      title: 'ISO/IEC 17025:2017',
-      category: 'Testing & Calibration Laboratories',
-      totalDoc: '1,242',
-      manual: '12',
-      prosedur: '85',
-      instruksiKerja: '210',
-      formulir: '935',
-    },
-    {
-      id: 'iso-50001-2018',
-      code: '50001:2018',
-      title: 'ISO 50001:2018',
-      category: 'Energy Management System',
-      totalDoc: '1,242',
-      manual: '12',
-      prosedur: '85',
-      instruksiKerja: '210',
-      formulir: '935',
-    },
-    {
-      id: 'iso-27001-2022',
-      code: '27001:2022',
-      title: 'ISO 27001:2022',
-      category: 'Information Security Management',
-      totalDoc: '1,242',
-      manual: '12',
-      prosedur: '85',
-      instruksiKerja: '210',
-      formulir: '935',
-    },
-    {
-      id: 'spln-s5-001',
-      code: 'SPLN S5.001',
-      title: 'SPLN S5.001:2023',
-      category: 'Spesifikasi Meter Transaksi Listrik',
-      totalDoc: '1,242',
-      manual: '12',
-      prosedur: '85',
-      instruksiKerja: '210',
-      formulir: '935',
-    },
-    {
-      id: 'iso-31000-2018',
-      code: '31000:2018',
-      title: 'ISO 31000:2018',
-      category: 'Risk Management Guidelines',
-      totalDoc: '1,242',
-      manual: '12',
-      prosedur: '85',
-      instruksiKerja: '210',
-      formulir: '935',
-    },
-  ];
-
-  const filteredIso = isoStandards.filter((iso) =>
+  const filteredIso = standardsList.filter((iso) =>
     iso.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
     iso.category.toLowerCase().includes(searchTerm.toLowerCase())
   );
@@ -222,8 +119,6 @@ export default function StandarView() {
           ))}
         </div>
       </div>
-
-      <Footer />
     </div>
   
     </PublicLayout>);

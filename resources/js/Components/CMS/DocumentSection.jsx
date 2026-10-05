@@ -1,43 +1,15 @@
 import React from 'react';
 import { ArrowRight, FileText, Clock, Tag } from 'lucide-react';
 
-export default function DocumentSection() {
-  const documents = [
-    {
-      id: 'doc-1',
-      title: 'Dokumen A',
-      timestamp: '21/11/2025, 09:41 AM',
-      status: 'Belum Direview',
-      statusType: 'warning', // Orange/Gray
-      tags: ['ISO 9001', 'ISO 14001', 'Manual', 'Bidang A'],
-      note: 'Catatan: -',
-    },
-    {
-      id: 'doc-2',
-      title: 'Dokumen B',
-      timestamp: '20/11/2025, 14:15 PM',
-      status: 'Relevan',
-      statusType: 'success', // Teal/Green italic
-      tags: ['ISO 9001', 'Prosedur', 'Bidang B'],
-      note: 'Catatan: Relevan dengan standar industri manufaktur & sertifikasi PLN.',
-    },
-    {
-      id: 'doc-3',
-      title: 'Dokumen C',
-      timestamp: '19/11/2025, 11:30 AM',
-      status: 'Relevan',
-      statusType: 'success', // Teal/Green italic
-      tags: ['ISO 45001', 'Instruksi Kerja', 'Bidang C'],
-      note: 'Catatan: -',
-    },
-  ];
+export default function DocumentSection({ stats = {} }) {
+  const documents = stats.recentlyAdded || [];
 
   const documentStats = [
-    { label: 'Jumlah Dokumen', count: 100 },
-    { label: 'Jumlah Manual', count: 25 },
-    { label: 'Jumlah Prosedur', count: 25 },
-    { label: 'Jumlah Instruksi Kerja', count: 25 },
-    { label: 'Jumlah Formulir', count: 25 },
+    { label: 'Jumlah Dokumen', count: stats.totalDocuments || 0 },
+    { label: 'Dokumen Relevan', count: stats.relevantDocuments || 0 },
+    { label: 'Jumlah Manual', count: 25 }, // Mock for phase 2
+    { label: 'Jumlah Prosedur', count: 25 }, // Mock for phase 2
+    { label: 'Jumlah Instruksi Kerja', count: 25 }, // Mock for phase 2
   ];
 
   return (

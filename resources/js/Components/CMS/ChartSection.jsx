@@ -13,26 +13,9 @@ import {
   Legend
 } from 'recharts';
 
-// Data for Line/Area Chart: Tren Review Dokumen
-const trendData = [
-  { year: '2022', count: 503 },
-  { year: '2023', count: 857 },
-  { year: '2024', count: 1035 },
-  { year: '2025', count: 2081 },
-];
-
-// Data for Donut Chart: Sebaran Dokumen per Bidang (Bidang A - I)
-const bidangData = [
-  { name: 'Bidang A', value: 25, color: '#00A2B9' },
-  { name: 'Bidang B', value: 18, color: '#006B7B' },
-  { name: 'Bidang C', value: 15, color: '#E67E22' },
-  { name: 'Bidang D', value: 12, color: '#3B82F6' },
-  { name: 'Bidang E', value: 10, color: '#10B981' },
-  { name: 'Bidang F', value: 8, color: '#8B5CF6' },
-  { name: 'Bidang G', value: 5, color: '#EC4899' },
-  { name: 'Bidang H', value: 4, color: '#F59E0B' },
-  { name: 'Bidang I', value: 3, color: '#64748B' },
-];
+export default function ChartSection({ stats = {} }) {
+  const trendData = stats.trendData || [];
+  const bidangData = stats.bidangData || [];
 
 // Custom Label above data points
 const CustomPointLabel = (props) => {
@@ -65,7 +48,6 @@ const CustomPointLabel = (props) => {
   );
 };
 
-export default function ChartSection() {
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
       {/* Kiri (2 Kolom): Area/Line Chart */}

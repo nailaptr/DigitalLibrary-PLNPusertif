@@ -11,10 +11,6 @@ use Illuminate\Support\Facades\Storage;
 
 class DocumentController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('permission:manage documents');
-    }
 
     public function index()
     {

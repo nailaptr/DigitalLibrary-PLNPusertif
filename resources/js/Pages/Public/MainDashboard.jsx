@@ -10,9 +10,9 @@ import {
 } from 'lucide-react';
 import { Link } from '@inertiajs/react';
 import { useTranslation } from 'react-i18next';
-import Footer from '@/Components/Footer';
 
-export default function MainDashboard({ stats = { standardCount: 0, certificateCount: 0, documentCount: 0 } }) {
+
+export default function MainDashboard({ stats = { standardCount: 0, certificateCount: 0, documentCount: 0 }, isoIds = {}, recentCertificates = [] }) {
   const [currentSlide, setCurrentSlide] = useState(0);
   const { t } = useTranslation();
 
@@ -131,7 +131,7 @@ export default function MainDashboard({ stats = { standardCount: 0, certificateC
         <section className="max-w-6xl mx-auto my-12 px-4 sm:px-8 space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {/* Card 1: ISO 9001: 2015 (Biru) */}
-            <div className="bg-white rounded-2xl shadow-md p-8 text-center border border-slate-100 flex flex-col items-center justify-between hover:shadow-xl transition-all group">
+            <Link href={isoIds?.['9001'] ? `/standar/${isoIds['9001']}` : '#'} className="bg-white rounded-2xl shadow-md p-8 text-center border border-slate-100 flex flex-col items-center justify-between hover:shadow-xl transition-all group">
               <div className="relative w-36 h-36 flex items-center justify-center mb-6">
                 <svg className="w-full h-full transform -rotate-90" viewBox="0 0 36 36">
                   <path
@@ -162,10 +162,10 @@ export default function MainDashboard({ stats = { standardCount: 0, certificateC
               <p className="text-sm font-semibold text-slate-600 mb-4">
                 Quality Management
               </p>
-            </div>
+            </Link>
 
             {/* Card 2: ISO 14001: 2015 (Hijau) */}
-            <div className="bg-white rounded-2xl shadow-md p-8 text-center border border-slate-100 flex flex-col items-center justify-between hover:shadow-xl transition-all group">
+            <Link href={isoIds?.['14001'] ? `/standar/${isoIds['14001']}` : '#'} className="bg-white rounded-2xl shadow-md p-8 text-center border border-slate-100 flex flex-col items-center justify-between hover:shadow-xl transition-all group">
               <div className="relative w-36 h-36 flex items-center justify-center mb-6">
                 <svg className="w-full h-full transform -rotate-90" viewBox="0 0 36 36">
                   <path
@@ -196,10 +196,10 @@ export default function MainDashboard({ stats = { standardCount: 0, certificateC
               <p className="text-sm font-semibold text-slate-600 mb-4">
                 Environmental Management
               </p>
-            </div>
+            </Link>
 
             {/* Card 3: ISO 45001: 2018 (Merah) */}
-            <div className="bg-white rounded-2xl shadow-md p-8 text-center border border-slate-100 flex flex-col items-center justify-between hover:shadow-xl transition-all group">
+            <Link href={isoIds?.['45001'] ? `/standar/${isoIds['45001']}` : '#'} className="bg-white rounded-2xl shadow-md p-8 text-center border border-slate-100 flex flex-col items-center justify-between hover:shadow-xl transition-all group">
               <div className="relative w-36 h-36 flex items-center justify-center mb-6">
                 <svg className="w-full h-full transform -rotate-90" viewBox="0 0 36 36">
                   <path
@@ -230,7 +230,7 @@ export default function MainDashboard({ stats = { standardCount: 0, certificateC
               <p className="text-sm font-semibold text-slate-600 mb-4">
                 Safety & Health Management
               </p>
-            </div>
+            </Link>
           </div>
 
           <div className="flex justify-end pt-2">
@@ -251,83 +251,43 @@ export default function MainDashboard({ stats = { standardCount: 0, certificateC
           </h2>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {/* Card 1 */}
-            <div className="bg-white rounded-2xl border border-slate-100 shadow-sm hover:shadow-md transition-all overflow-hidden flex flex-col justify-between group">
-              <div>
-                <div className="relative h-48 bg-slate-50 p-4 border-b border-slate-100 overflow-hidden flex items-center justify-center">
-                  <img
-                    src="/images/cert_thumb.png"
-                    alt="Sertifikat PLN Pusertif"
-                    className="max-h-full object-contain rounded-lg shadow-sm group-hover:scale-105 transition-transform duration-300"
-                  />
-                  <span className="absolute top-3 right-3 bg-[#D9252A] text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase">
-                    Pusertif
-                  </span>
-                </div>
+              {recentCertificates.map((cert) => (
+                <a 
+                  key={cert.id} 
+                  href={cert.file_path ? `/storage/${cert.file_path}` : '#'} 
+                  target={cert.file_path ? "_blank" : "_self"}
+                  rel="noopener noreferrer"
+                  className="bg-white rounded-2xl border border-slate-100 shadow-sm hover:shadow-md transition-all overflow-hidden flex flex-col justify-between group cursor-pointer"
+                >
+                  <div>
+                    <div className="relative h-48 bg-slate-50 p-4 border-b border-slate-100 overflow-hidden flex items-center justify-center">
+                      <img
+                        src={cert.image}
+                        alt="Sertifikat"
+                        className="max-h-full object-contain rounded-lg shadow-sm group-hover:scale-105 transition-transform duration-300"
+                      />
+                      <span className="absolute top-3 right-3 bg-[#D9252A] text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase">
+                        Pusertif
+                      </span>
+                    </div>
 
-                <div className="p-6 space-y-2">
-                  <h3 className="text-base font-bold text-slate-900 group-hover:text-cyan-600 transition-colors leading-snug">
-                    Sistem Manajemen (Standar)
-                  </h3>
-                  <p className="text-xs font-semibold text-slate-600 flex items-center gap-1.5 pt-1">
-                    <Building2 className="w-3.5 h-3.5 text-slate-400 shrink-0" />
-                    <span>PT COGINDO DAYA BERSAMA</span>
-                  </p>
+                    <div className="p-6 space-y-2">
+                      <h3 className="text-base font-bold text-slate-900 group-hover:text-cyan-600 transition-colors leading-snug">
+                        {cert.title}
+                      </h3>
+                      <p className="text-xs font-semibold text-slate-600 flex items-center gap-1.5 pt-1">
+                        <Building2 className="w-3.5 h-3.5 text-slate-400 shrink-0" />
+                        <span>{cert.issuer || cert.recipient}</span>
+                      </p>
+                    </div>
+                  </div>
+                </a>
+              ))}
+              {recentCertificates.length === 0 && (
+                <div className="col-span-3 text-center py-12 text-slate-500 font-medium">
+                  Belum ada sertifikat.
                 </div>
-              </div>
-            </div>
-
-            {/* Card 2 */}
-            <div className="bg-white rounded-2xl border border-slate-100 shadow-sm hover:shadow-md transition-all overflow-hidden flex flex-col justify-between group">
-              <div>
-                <div className="relative h-48 bg-slate-50 p-4 border-b border-slate-100 overflow-hidden flex items-center justify-center">
-                  <img
-                    src="/images/cert_thumb.png"
-                    alt="Sertifikat PLN Pusertif"
-                    className="max-h-full object-contain rounded-lg shadow-sm group-hover:scale-105 transition-transform duration-300"
-                  />
-                  <span className="absolute top-3 right-3 bg-[#D9252A] text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase">
-                    Pusertif
-                  </span>
-                </div>
-
-                <div className="p-6 space-y-2">
-                  <h3 className="text-base font-bold text-slate-900 group-hover:text-cyan-600 transition-colors leading-snug">
-                    Sistem Manajemen (Standar)
-                  </h3>
-                  <p className="text-xs font-semibold text-slate-600 flex items-center gap-1.5 pt-1">
-                    <Building2 className="w-3.5 h-3.5 text-slate-400 shrink-0" />
-                    <span>PT PLN INDONESIA POWER</span>
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            {/* Card 3 */}
-            <div className="bg-white rounded-2xl border border-slate-100 shadow-sm hover:shadow-md transition-all overflow-hidden flex flex-col justify-between group">
-              <div>
-                <div className="relative h-48 bg-slate-50 p-4 border-b border-slate-100 overflow-hidden flex items-center justify-center">
-                  <img
-                    src="/images/cert_thumb.png"
-                    alt="Sertifikat PLN Pusertif"
-                    className="max-h-full object-contain rounded-lg shadow-sm group-hover:scale-105 transition-transform duration-300"
-                  />
-                  <span className="absolute top-3 right-3 bg-[#D9252A] text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase">
-                    Pusertif
-                  </span>
-                </div>
-
-                <div className="p-6 space-y-2">
-                  <h3 className="text-base font-bold text-slate-900 group-hover:text-cyan-600 transition-colors leading-snug">
-                    Sistem Manajemen (Standar)
-                  </h3>
-                  <p className="text-xs font-semibold text-slate-600 flex items-center gap-1.5 pt-1">
-                    <Building2 className="w-3.5 h-3.5 text-slate-400 shrink-0" />
-                    <span>PT PLN NUSANTARA POWER</span>
-                  </p>
-                </div>
-              </div>
-            </div>
+              )}
           </div>
 
           <div className="flex justify-end pt-2">
@@ -340,8 +300,6 @@ export default function MainDashboard({ stats = { standardCount: 0, certificateC
         </section>
       </div>
 
-      {/* Shared Footer Component */}
-      <Footer />
     </div>
   
     </PublicLayout>);

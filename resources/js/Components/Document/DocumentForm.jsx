@@ -22,10 +22,14 @@ export default function DocumentForm({
 
   // State 1: Multi-Standar Acuan Relation Repeater
   const [standarAcuanRelations, setStandarAcuanRelations] = useState(
-    documentData?.standarAcuanRelations || documentData?.sdgRelations || [
+    documentData?.standarAcuanRelations || documentData?.sdgRelations?.map(rel => ({
+      ...rel,
+      id: `row-${Date.now()}-${Math.random()}`,
+      standard_id: rel.id, 
+    })) || [
       {
-        id: 'standar-1',
-        standard: 'ISO 9001:2015',
+        id: `row-${Date.now()}`,
+        standard_id: standardsList[0]?.id || '',
         clause: 'Klausul 4: Konteks Organisasi',
         subClause: 'Sub 4.1: Memahami Organisasi & Konteksnya',
         isPrimary: true,
@@ -49,8 +53,8 @@ export default function DocumentForm({
   // Handlers for Multi-Standar Acuan Repeater
   const handleAddStandarAcuanRow = () => {
     const newRow = {
-      id: `standar-${Date.now()}`,
-      standard: 'ISO 14001:2015',
+      id: `row-${Date.now()}`,
+      standard_id: standardsList[0]?.id || '',
       clause: 'Klausul 5: Kepemimpinan',
       subClause: 'Sub 5.1: Kepemimpinan & Komitmen',
       isPrimary: standarAcuanRelations.length === 0, // Auto primary if first
@@ -88,7 +92,7 @@ export default function DocumentForm({
     e.preventDefault();
     const files = e.dataTransfer ? e.dataTransfer.files : e.target.files;
     if (files && files[0]) {
-      setUploadedFile(files[0].name);
+      setUploadedFile(files[0]);
     }
   };
 
@@ -99,16 +103,16 @@ export default function DocumentForm({
     onSave({
       ...documentData,
       title,
-      uploadDate,
-      jenis,
-      bidang,
-      status,
-      note,
-      fileName: uploadedFile || 'Dokumen_Mutu_PLN_2025.pdf',
-      fileSize: '4.2 MB',
-      standarAcuanRelations,
-      sdgRelations: standarAcuanRelations,
-      updatedAt: new Date().toLocaleString('id-ID', { dateStyle: 'short', timeStyle: 'short' }),
+      document_type: jenis,
+      field: bidang,
+      status, // should be 'relevan' by default in backend anyway, but we pass it
+      notes: note,
+      upload_date: uploadDate,
+      file: uploadedFile,
+      standard_ids: standarAcuanRelations.map(rel => rel.standard_id),
+      primary_standard_id: standarAcuanRelations.find(rel => rel.isPrimary)?.standard_id || standarAcuanRelations[0]?.standard_id,
+      clause: standarAcuanRelations[0]?.clause,
+      sub_clause: standarAcuanRelations[0]?.subClause,
     });
   };
 
@@ -200,14 +204,13 @@ export default function DocumentForm({
                         Standar Terkait <span className="text-red-500">*</span>
                       </label>
                       <select
-                        value={row.standard}
-                        onChange={(e) => handleStandarAcuanRowChange(row.id, 'standard', e.target.value)}
+                        value={row.standard_id}
+                        onChange={(e) => handleStandarAcuanRowChange(row.id, 'standard_id', e.target.value)}
                         className="w-full px-3 py-2 text-xs border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#00838F] font-semibold text-slate-800 bg-white"
                       >
-                        <option value="ISO 9001:2015">ISO 9001:2015</option>
-                        <option value="ISO 14001:2015">ISO 14001:2015</option>
-                        <option value="ISO 45001:2018">ISO 45001:2018</option>
-                        <option value="ISO Lainnya">ISO Lainnya</option>
+                        {standardsList.map((std) => (
+                          <option key={std.id} value={std.id}>{std.name}</option>
+                        ))}
                       </select>
                     </div>
 
@@ -394,7 +397,7 @@ export default function DocumentForm({
               {uploadedFile ? (
                 <div className="flex items-center justify-center gap-2 text-sm font-bold text-slate-800">
                   <FileText className="w-5 h-5 text-[#00838F]" />
-                  <span>{uploadedFile}</span>
+                  <span>{uploadedFile.name || uploadedFile}</span>
                   <span className="text-xs text-emerald-600 font-semibold bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-200">
                     Siap Diunggah
                   </span>

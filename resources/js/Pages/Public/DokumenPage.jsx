@@ -3,62 +3,9 @@ import React, { useState } from 'react';
 import { Download, Search } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
-export default function DokumenPage() {
+export default function DokumenPage({ documents = [] }) {
   const { t } = useTranslation();
   const [searchTerm, setSearchTerm] = useState('');
-
-  const documents = [
-    {
-      code: 'SOP-PST-9001-085',
-      name: 'Prosedur Kalibrasi Alat Ukur Listrik Tegangan Tinggi',
-      category: 'Prosedur (SOP)',
-      bidang: 'Bidang Kalibrasi & Instrumentasi',
-      rev: 'Rev. 04',
-      date: '01 Oktober 2024',
-      type: 'PDF',
-      size: '2.4 MB'
-    },
-    {
-      code: 'IK-PST-14001-140',
-      name: 'Instruksi Kerja Pengujian Limbah B3 Operasional Pembangkit',
-      category: 'Instruksi Kerja',
-      bidang: 'Bidang Standarisasi & Pengujian',
-      rev: 'Rev. 02',
-      date: '15 Oktober 2024',
-      type: 'PDF',
-      size: '1.8 MB'
-    },
-    {
-      code: 'FM-PST-45001-510',
-      name: 'Formulir Inspeksi Kelayakan Alat Pelindung Diri (APD) K3',
-      category: 'Formulir',
-      bidang: 'Bidang Sertifikasi Produk',
-      rev: 'Rev. 05',
-      date: '25 September 2024',
-      type: 'XLSX',
-      size: '850 KB'
-    },
-    {
-      code: 'MAN-PST-9001-012',
-      name: 'Manual Mutu Terintegrasi PLN Pusertif Tahun 2024-2026',
-      category: 'Manual Mutu',
-      bidang: 'Bidang Umum & SDM',
-      rev: 'Rev. 01',
-      date: '10 September 2024',
-      type: 'PDF',
-      size: '5.6 MB'
-    },
-    {
-      code: 'SOP-PST-FIN-122',
-      name: 'Prosedur Pengadaan Barang & Jasa Laboratorium Pengujian',
-      category: 'Prosedur (SOP)',
-      bidang: 'Bidang Keuangan & Logistik',
-      rev: 'Rev. 03',
-      date: '02 September 2024',
-      type: 'PDF',
-      size: '3.1 MB'
-    }
-  ];
 
   const filteredDocs = documents.filter(
     (doc) =>
@@ -142,16 +89,29 @@ export default function DokumenPage() {
                     {doc.date}
                   </td>
                   <td className="py-4 px-6 text-right">
-                    <button
-                      onClick={() => alert(`Downloading ${doc.code} (${doc.size})`)}
-                      className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-[#00A3E0] text-white rounded-lg font-bold hover:bg-[#127297] shadow-xs transition-colors cursor-pointer"
-                    >
-                      <Download className="w-3.5 h-3.5" />
-                      <span>{t('documents.downloadBtn')}</span>
-                    </button>
+                    {doc.file_path ? (
+                      <a
+                        href={`/storage/${doc.file_path}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-[#00A3E0] text-white rounded-lg font-bold hover:bg-[#127297] shadow-xs transition-colors cursor-pointer"
+                      >
+                        <Download className="w-3.5 h-3.5" />
+                        <span>{t('documents.downloadBtn')}</span>
+                      </a>
+                    ) : (
+                      <span className="text-xs text-slate-400">Tidak ada file</span>
+                    )}
                   </td>
                 </tr>
               ))}
+              {filteredDocs.length === 0 && (
+                <tr>
+                  <td colSpan="6" className="py-10 text-center text-slate-500 font-medium">
+                    Belum ada dokumen yang diunggah.
+                  </td>
+                </tr>
+              )}
             </tbody>
           </table>
         </div>

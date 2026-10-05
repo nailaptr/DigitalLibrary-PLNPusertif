@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link } from '@inertiajs/react';
+import { Link, usePage } from '@inertiajs/react';
 import logoPLN from '../assets/logo-pln-fix.png';
 import {
   LayoutDashboard,
@@ -21,13 +21,17 @@ export default function Sidebar({ activeItem = 'Overview', onSelectMenu }) {
   const [collapsed, setCollapsed] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
 
+  const { auth } = usePage().props;
+  const user = auth?.user || { name: 'User', email: '' };
+  const userRole = user.roles && user.roles.length > 0 ? user.roles[0].name : 'User';
+
   const menuGroups = [
     {
       group: 'Dashboard',
       items: [
-        { name: 'Overview', icon: LayoutDashboard, path: '#' },
-        { name: 'Laporan & Statistik', icon: BarChart2, path: route ? route('reports.index') : '/reports' },
-        { name: 'Manajemen User', icon: Users, path: '#' },
+        { name: 'Overview', icon: LayoutDashboard, path: route ? route('dashboard') : '#' },
+        { name: 'Log Aktivitas', icon: History, path: route ? route('activity_logs.index') : '/activity-logs' },
+        { name: 'Manajemen User', icon: Users, path: route ? route('users.index') : '/users' },
       ],
     },
     {
@@ -36,7 +40,8 @@ export default function Sidebar({ activeItem = 'Overview', onSelectMenu }) {
         { name: 'Dokumen', icon: FileText, path: route ? route('documents.index') : '/documents' },
         { name: 'Sertifikat', icon: Award, path: route ? route('certificates.index') : '/certificates' },
         { name: 'Standar', icon: Layers, path: route ? route('standards.index') : '/standards' },
-        { name: 'Log Aktivitas', icon: History, path: route ? route('activity_logs.index') : '/activity-logs' },
+        { name: 'Status Dokumen', icon: FileCheck, path: '#' },
+        { name: 'FAQ', icon: HelpCircle, path: '#' },
       ],
     },
   ];
@@ -103,26 +108,27 @@ export default function Sidebar({ activeItem = 'Overview', onSelectMenu }) {
               <div className="flex items-center gap-3 overflow-hidden">
                 <div className="relative shrink-0">
                   <img
-                    src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=150"
-                    alt="John Doe Avatar"
+                    src={`https://ui-avatars.com/api/?name=${encodeURIComponent(user.name)}&background=0D8ABC&color=fff`}
+                    alt="User Avatar"
                     className="w-10 h-10 rounded-full object-cover border-2 border-[#00A2B9]"
                   />
                   <span className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-emerald-500 border-2 border-[#2D3139] rounded-full"></span>
                 </div>
                 {!collapsed && (
                   <div className="truncate">
-                    <p className="text-sm font-semibold text-white truncate">John Doe</p>
-                    <p className="text-xs text-slate-400 font-medium">Admin</p>
+                    <p className="text-sm font-semibold text-white truncate">{user.name}</p>
+                    <p className="text-xs text-slate-400 font-medium">{userRole}</p>
                   </div>
                 )}
               </div>
               {!collapsed && (
-                <button
+                <Link
+                  href={route('profile.edit')}
                   className="text-slate-400 hover:text-[#00A2B9] p-1.5 hover:bg-slate-700/50 rounded-lg transition"
-                  title="Settings"
+                  title="Edit Profile"
                 >
                   <Settings className="w-4 h-4" />
-                </button>
+                </Link>
               )}
             </div>
           </div>

@@ -58,7 +58,7 @@ export default function CertificateManagement({ onNavigate, initialCertificates 
     e.preventDefault();
     const data = new FormData();
     for (const key in formData) {
-      if (formData[key] !== null && formData[key] !== undefined) {
+      if (formData[key] !== null && formData[key] !== undefined && formData[key] !== '') {
         data.append(key, formData[key]);
       }
     }

@@ -1,8 +1,7 @@
 import PublicLayout from '@/Layouts/PublicLayout';
 import React, { useState } from 'react';
 import { Link } from '@inertiajs/react';
-const useParams = () => ({ isoId: 'default' });
-import { ArrowLeft, RotateCcw, Filter as FilterIcon } from 'lucide-react';
+import { ArrowLeft, RotateCcw, Filter as FilterIcon, Download } from 'lucide-react';
 import {
   AreaChart,
   Area,
@@ -12,10 +11,9 @@ import {
   ResponsiveContainer
 } from 'recharts';
 import { useTranslation } from 'react-i18next';
-import Footer from '@/Components/Footer';
 
-export default function StandarDetailView() {
-  const { isoId } = useParams();
+export default function StandarDetailView({ standardData = {}, documentList = [] }) {
+  const isoId = standardData.title || '';
   const { t } = useTranslation();
 
   // Filter States
@@ -64,7 +62,7 @@ export default function StandarDetailView() {
     return 'ISO 9001';
   };
 
-  const isoTitle = getIsoTitle();
+  const isoTitle = standardData.title || getIsoTitle();
 
   return (
     <PublicLayout>
@@ -90,7 +88,7 @@ export default function StandarDetailView() {
               {isoTitle}
             </h1>
             <p className="text-white/90 text-sm leading-relaxed">
-              {t('standardsDetail.subtitle')}
+              {standardData.description || t('standardsDetail.subtitle')}
             </p>
           </div>
         </div>
@@ -266,9 +264,77 @@ export default function StandarDetailView() {
             </div>
           </div>
         </div>
-      </div>
 
-      <Footer />
+        {/* DOCUMENTS TABLE SECTION */}
+        <div className="bg-white rounded-3xl border border-slate-100 shadow-md overflow-hidden mt-8">
+          <div className="p-6 border-b border-slate-100">
+            <h3 className="text-lg font-bold text-slate-800">Daftar Dokumen</h3>
+          </div>
+          <div className="overflow-x-auto">
+            <table className="w-full text-left text-xs border-collapse">
+              <thead>
+                <tr className="bg-slate-100 text-slate-700 font-bold uppercase tracking-wider border-b border-slate-200">
+                  <th className="py-4 px-6">{t('documents.codeHeader')} & {t('documents.titleHeader')}</th>
+                  <th className="py-4 px-4">{t('documents.categoryHeader')}</th>
+                  <th className="py-4 px-4">{t('documents.divisionHeader')}</th>
+                  <th className="py-4 px-4 text-center">{t('documents.dateHeader')}</th>
+                  <th className="py-4 px-6 text-right">{t('documents.actionHeader')}</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-100 font-medium text-slate-700">
+                {documentList.map((doc, idx) => (
+                  <tr key={idx} className="hover:bg-slate-50 transition-colors">
+                    <td className="py-4 px-6">
+                      <div className="space-y-0.5">
+                        <span className="font-mono text-[10px] font-bold text-[#00A3E0] block">
+                          {doc.code}
+                        </span>
+                        <span className="font-bold text-slate-900 text-sm block leading-snug">
+                          {doc.name}
+                        </span>
+                      </div>
+                    </td>
+                    <td className="py-4 px-4">
+                      <span className="px-2.5 py-1 bg-blue-50 text-[#00A3E0] rounded-lg font-bold border border-blue-100">
+                        {doc.category}
+                      </span>
+                    </td>
+                    <td className="py-4 px-4 text-slate-600">
+                      {doc.bidang}
+                    </td>
+                    <td className="py-4 px-4 text-center text-slate-500">
+                      {doc.date}
+                    </td>
+                    <td className="py-4 px-6 text-right">
+                      {doc.file_path ? (
+                        <a
+                          href={`/storage/${doc.file_path}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-[#00A3E0] text-white text-xs font-bold rounded-lg hover:bg-[#00838F] transition-colors shadow-xs"
+                        >
+                          <Download className="w-3.5 h-3.5" />
+                          <span>Unduh</span>
+                        </a>
+                      ) : (
+                        <span className="text-xs text-slate-400">Tidak ada file</span>
+                      )}
+                    </td>
+                  </tr>
+                ))}
+                {documentList.length === 0 && (
+                  <tr>
+                    <td colSpan="5" className="py-8 text-center text-slate-500 font-medium">
+                      Belum ada dokumen untuk standar ini.
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
     </div>
   
     </PublicLayout>);

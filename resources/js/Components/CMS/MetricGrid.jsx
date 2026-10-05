@@ -9,12 +9,12 @@ import {
   ArrowRight
 } from 'lucide-react';
 
-export default function MetricGrid() {
+export default function MetricGrid({ stats = {} }) {
   const metrics = [
     {
       id: 1,
       title: 'Total User Aktif',
-      value: '12',
+      value: stats.totalUsers || '0', 
       icon: Users,
       bgColor: 'bg-[#00A2B9]/10',
       iconColor: 'text-[#00A2B9]',
@@ -24,7 +24,7 @@ export default function MetricGrid() {
     {
       id: 2,
       title: 'Jumlah Dokumen',
-      value: '100',
+      value: stats.totalDocuments || '0',
       icon: FileText,
       bgColor: 'bg-emerald-500/10',
       iconColor: 'text-emerald-600',
@@ -34,7 +34,7 @@ export default function MetricGrid() {
     {
       id: 3,
       title: 'Jumlah Sertifikat',
-      value: '24',
+      value: stats.totalCertificates || '0',
       icon: Award,
       bgColor: 'bg-emerald-500/10',
       iconColor: 'text-emerald-600',
@@ -43,8 +43,8 @@ export default function MetricGrid() {
     },
     {
       id: 4,
-      title: 'Total Bidang',
-      value: '4',
+      title: 'Dokumen Relevan',
+      value: stats.relevantDocuments || '0',
       icon: Grid,
       bgColor: 'bg-[#00A2B9]/10',
       iconColor: 'text-[#00A2B9]',
@@ -54,7 +54,7 @@ export default function MetricGrid() {
     {
       id: 5,
       title: 'Jumlah Standar',
-      value: '4',
+      value: stats.totalStandards || '0',
       icon: PieChart,
       bgColor: 'bg-blue-500/10',
       iconColor: 'text-blue-600',
@@ -64,7 +64,7 @@ export default function MetricGrid() {
     {
       id: 6,
       title: 'Jumlah Review',
-      value: '50',
+      value: stats.totalReviews || 0,
       icon: ClipboardList,
       bgColor: 'bg-[#E67E22]/10',
       iconColor: 'text-[#E67E22]',

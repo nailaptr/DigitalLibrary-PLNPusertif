@@ -4,6 +4,7 @@ import { Eye, EyeOff, ArrowLeft, Check, ChevronRight } from 'lucide-react';
 export default function UserForm({
   mode = 'add', // 'add' | 'edit'
   user = null,
+  roles = [],
   onSave,
   onCancel,
 }) {
@@ -11,7 +12,8 @@ export default function UserForm({
     name: user?.name || '',
     email: user?.email || '',
     password: '',
-    role: user?.role || 'Admin',
+    password_confirmation: '',
+    role: user?.role || (roles.length > 0 ? roles[0].name : 'Admin'),
     status: user?.status || 'Active',
   });
 
@@ -144,6 +146,24 @@ export default function UserForm({
               </div>
             </div>
           </div>
+          
+          {/* Password Confirmation */}
+          <div>
+            <label className="block text-xs font-bold text-slate-800 mb-2">
+              Konfirmasi Password {mode === 'add' && <span className="text-red-500">*</span>}
+            </label>
+            <div className="relative">
+              <input
+                type={showPassword ? 'text' : 'password'}
+                name="password_confirmation"
+                required={mode === 'add'}
+                value={formData.password_confirmation}
+                onChange={handleChange}
+                placeholder="Masukkan ulang password"
+                className="w-full pl-4 pr-11 py-2.5 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#00838F] focus:border-transparent font-medium text-slate-800 bg-white"
+              />
+            </div>
+          </div>
         </div>
 
         {/* Row 3: Role & Status (2 Kolom) */}
@@ -159,9 +179,9 @@ export default function UserForm({
               onChange={handleChange}
               className="w-full px-4 py-2.5 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#00838F] focus:border-transparent font-medium text-slate-800 bg-white"
             >
-              <option value="Admin">Admin</option>
-              <option value="Manager">Manager</option>
-              <option value="Staff">Staff</option>
+              {roles.map(role => (
+                <option key={role.id} value={role.name}>{role.name}</option>
+              ))}
             </select>
           </div>
 

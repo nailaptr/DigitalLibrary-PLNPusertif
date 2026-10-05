@@ -10,10 +10,6 @@ use Illuminate\Support\Facades\Storage;
 
 class CertificateController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('permission:manage certificates');
-    }
 
     public function index()
     {

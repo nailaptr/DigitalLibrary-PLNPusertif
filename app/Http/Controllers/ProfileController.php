@@ -36,6 +36,8 @@ class ProfileController extends Controller
         }
 
         $request->user()->save();
+        
+        \App\Models\ActivityLog::record(\App\Models\ActivityLog::ACTION_UPDATE, $request->user(), "Memperbarui profile diri sendiri");
 
         return Redirect::route('profile.edit');
     }

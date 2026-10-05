@@ -30,10 +30,20 @@ export default function ActivityLog({ onNavigate, logs = [] }) {
           </div>
 
           <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
-            <div className="overflow-x-auto">
-              <table className="w-full text-left border-collapse">
+            <div className="flex flex-col lg:flex-row items-center justify-between gap-4 p-5 border-b border-gray-100">
+              <div className="relative w-full lg:w-72">
+                <input
+                  type="text"
+                  placeholder="Cari Log..."
+                  className="w-full px-4 py-2 text-xs border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#00838F] bg-white font-medium text-slate-700 shadow-2xs"
+                />
+              </div>
+            </div>
+
+            <div className="overflow-x-auto p-5">
+              <table className="w-full text-left border-separate border-spacing-y-2">
                 <thead>
-                  <tr className="bg-slate-50 border-b border-slate-200 text-xs font-semibold text-slate-500 uppercase tracking-wider">
+                  <tr className="text-[11px] font-extrabold text-gray-500 uppercase tracking-wider">
                     <th className="px-6 py-4">Waktu</th>
                     <th className="px-6 py-4">Pengguna</th>
                     <th className="px-6 py-4">Aksi</th>
@@ -41,9 +51,9 @@ export default function ActivityLog({ onNavigate, logs = [] }) {
                     <th className="px-6 py-4">Detail</th>
                   </tr>
                 </thead>
-                <tbody className="text-sm divide-y divide-slate-100">
+                <tbody className="text-xs">
                   {logs.length > 0 ? logs.map((log) => (
-                    <tr key={log.id} className="hover:bg-slate-50/50 transition-colors">
+                    <tr key={log.id} className="bg-white hover:bg-slate-50/50 shadow-sm border border-gray-100 rounded-xl transition-all">
                       <td className="px-6 py-4 whitespace-nowrap text-slate-600">{log.created_at}</td>
                       <td className="px-6 py-4 whitespace-nowrap font-medium text-slate-800">{log.user_name}</td>
                       <td className="px-6 py-4 whitespace-nowrap">

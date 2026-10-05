@@ -9,10 +9,6 @@ use Inertia\Inertia;
 
 class StandardController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('permission:manage standards');
-    }
 
     public function index()
     {
