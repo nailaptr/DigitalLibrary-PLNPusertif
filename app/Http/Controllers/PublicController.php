@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Document;
 use App\Models\Certificate;
 use App\Models\Standard;
+use App\Models\Finding;
 use Inertia\Inertia;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -227,6 +228,77 @@ class PublicController extends Controller
 
         return Inertia::render('Public/DokumenPage', [
             'documents' => $docs,
+        ]);
+    }
+
+    /**
+     * Halaman Monitoring Temuan (Public)
+     */
+    public function findings(Request $request)
+    {
+        $query = Finding::where('is_published', true);
+
+        if ($request->filled('search')) {
+            $search = strtolower($request->search);
+            $query->where(function($q) use ($search) {
+                $q->whereRaw('LOWER(finding_number) LIKE ?', ["%{$search}%"])
+                  ->orWhereRaw('LOWER(person_name) LIKE ?', ["%{$search}%"])
+                  ->orWhereRaw('LOWER(finding_statement) LIKE ?', ["%{$search}%"]);
+            });
+        }
+
+        if ($request->filled('bidang') && $request->bidang !== 'Semua Bidang') {
+            $query->where('existing_work_area', $request->bidang);
+        }
+
+        if ($request->filled('klausul') && $request->klausul !== 'Semua Klausul') {
+            $query->where('clause', $request->klausul);
+        }
+
+        if ($request->filled('jenis') && $request->jenis !== 'Semua Jenis') {
+            $query->where('finding_type', strtolower($request->jenis));
+        }
+
+        $kpi = [
+            'total' => (clone $query)->count(),
+            'major' => (clone $query)->where('finding_type', 'major')->count(),
+            'minor' => (clone $query)->where('finding_type', 'minor')->count(),
+            'pi' => (clone $query)->where('finding_type', 'pi')->count(),
+        ];
+
+        $bidangOptions = Finding::where('is_published', true)
+                            ->select('existing_work_area')
+                            ->distinct()->pluck('existing_work_area')->filter()->values();
+        
+        $klausulOptions = Finding::where('is_published', true)
+                            ->select('clause')
+                            ->distinct()->pluck('clause')->filter()->values();
+
+        $findings = $query->orderBy('created_at', 'desc')->paginate(10)->withQueryString()->through(function($finding) {
+            return [
+                'id' => $finding->id,
+                'finding_number' => $finding->finding_number,
+                'finding_type' => $finding->finding_type,
+                'existing_work_area' => $finding->existing_work_area,
+                'clause' => $finding->clause,
+                'location_auditee' => $finding->location_auditee,
+                'finding_statement' => $finding->finding_statement,
+                'person_name' => $finding->person_name,
+                'cause' => $finding->cause,
+                'objective_evidence' => $finding->objective_evidence,
+                'requirement' => $finding->requirement,
+                'preventive_action' => $finding->preventive_action,
+            ];
+        });
+
+        return Inertia::render('Public/FindingPage', [
+            'findings' => $findings,
+            'kpi' => $kpi,
+            'filters' => $request->only(['search', 'bidang', 'klausul', 'jenis']),
+            'options' => [
+                'bidang' => $bidangOptions,
+                'klausul' => $klausulOptions,
+            ]
         ]);
     }
 }

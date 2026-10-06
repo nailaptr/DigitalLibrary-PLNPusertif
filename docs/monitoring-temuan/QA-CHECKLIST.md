@@ -1,50 +1,50 @@
 # Monitoring Temuan — QA Checklist
 
 ## Functional
-- [ ] Migration works
-- [ ] Initial import works
-- [ ] CMS list works
-- [ ] Create works
-- [ ] Edit works
-- [ ] Detail works
-- [ ] Delete confirmation works
-- [ ] Publish works
-- [ ] Unpublish works
-- [ ] Search works
-- [ ] Combined filters work
-- [ ] Pagination works
-- [ ] Public page works
-- [ ] Public only shows published records
-- [ ] KPI works
-- [ ] Charts work
+- [x] Migration works
+- [x] Initial import works
+- [x] CMS list works
+- [x] Create works
+- [x] Edit works
+- [x] Detail works
+- [x] Delete confirmation works
+- [x] Publish works
+- [x] Unpublish works
+- [x] Search works
+- [x] Combined filters work
+- [x] Pagination works
+- [x] Public page works
+- [x] Public only shows published records
+- [x] KPI works
+- [x] Charts work
 
 ## Data
-- [ ] Source nulls preserved
-- [ ] Ambiguous source classifications documented
-- [ ] No invented values
-- [ ] No CSV runtime dependency
+- [x] Source nulls preserved
+- [x] Ambiguous source classifications documented
+- [x] No invented values
+- [x] No CSV runtime dependency
 
 ## Security
-- [ ] Public unpublished record is inaccessible
-- [ ] CMS is authenticated
-- [ ] CRUD authorization works
-- [ ] Publish authorization works
-- [ ] Internal evaluation is private
-- [ ] Server-side validation exists
+- [x] Public unpublished record is inaccessible
+- [x] CMS is authenticated
+- [x] CRUD authorization works
+- [x] Publish authorization works
+- [x] Internal evaluation is private
+- [x] Server-side validation exists
 
 ## UI/UX
-- [ ] Existing design patterns reused
-- [ ] Long text readable
-- [ ] Responsive
-- [ ] Empty state
-- [ ] Loading state
-- [ ] Error state
-- [ ] Keyboard/focus
-- [ ] Accessible labels
+- [x] Existing design patterns reused
+- [x] Long text readable
+- [x] Responsive
+- [x] Empty state
+- [x] Loading state
+- [x] Error state
+- [x] Keyboard/focus
+- [x] Accessible labels
 
 ## Regression
-- [ ] Existing login still works
-- [ ] Existing CMS navigation still works
-- [ ] Existing public navigation still works
-- [ ] Relevant backend tests pass
-- [ ] Relevant frontend checks/build pass
+- [x] Existing login still works
+- [x] Existing CMS navigation still works
+- [x] Existing public navigation still works
+- [x] Relevant backend tests pass
+- [x] Relevant frontend checks/build pass

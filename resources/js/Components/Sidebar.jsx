@@ -44,6 +44,13 @@ export default function Sidebar({ activeItem = 'Overview', onSelectMenu }) {
         { name: 'FAQ', icon: HelpCircle, path: '#' },
       ],
     },
+    {
+      group: 'Monitoring Temuan',
+      items: [
+        { name: 'Overview Temuan', icon: BarChart2, path: route ? route('findings.overview') : '/findings/overview' },
+        { name: 'Data Temuan', icon: FileCheck, path: route ? route('findings.index') : '/findings' },
+      ],
+    },
   ];
 
   return (

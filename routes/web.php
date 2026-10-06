@@ -13,6 +13,7 @@ Route::get('/standar', [PublicController::class, 'standards'])->name('public.sta
 Route::get('/standar/{id}', [PublicController::class, 'showStandard'])->name('public.standards.show');
 Route::get('/sertifikat', [PublicController::class, 'certificates'])->name('public.certificates');
 Route::get('/dokumen', [PublicController::class, 'documents'])->name('public.documents');
+Route::get('/temuan', [PublicController::class, 'findings'])->name('public.findings');
 
 Route::get('/dashboard', [\App\Http\Controllers\DashboardController::class, 'index'])
     ->middleware(['auth', 'verified', 'permission:view dashboard'])->name('dashboard');
@@ -34,6 +35,22 @@ Route::middleware('auth')->group(function () {
     Route::resource('certificates', App\Http\Controllers\CertificateController::class)
         ->except(['create', 'show', 'edit'])
         ->middleware('permission:manage certificates');
+
+    Route::get('/findings/overview', [App\Http\Controllers\FindingController::class, 'overview'])
+        ->name('findings.overview')
+        ->middleware('permission:manage findings');
+
+    Route::resource('findings', App\Http\Controllers\FindingController::class)
+        ->except(['create', 'show', 'edit'])
+        ->middleware('permission:manage findings');
+        
+    Route::post('/findings/{finding}/publish', [App\Http\Controllers\FindingController::class, 'publish'])
+        ->name('findings.publish')
+        ->middleware('permission:manage findings');
+        
+    Route::post('/findings/{finding}/unpublish', [App\Http\Controllers\FindingController::class, 'unpublish'])
+        ->name('findings.unpublish')
+        ->middleware('permission:manage findings');
 
     Route::get('/reports', [App\Http\Controllers\ReportController::class, 'index'])
         ->middleware('permission:view statistics')
