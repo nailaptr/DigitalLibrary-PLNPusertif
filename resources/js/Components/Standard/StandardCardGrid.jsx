@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { router } from '@inertiajs/react';
 import {
   Layers,
   FileText,
@@ -13,21 +14,40 @@ import {
 
 export default function StandardCardGrid({
   standards,
+  initialSearch = '',
   onOpenAddModal,
   onOpenEditModal,
   onDeleteStandard,
   onSelectStandard, // Triggers navigation to Level 2
 }) {
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState(initialSearch);
   const [filterOption, setFilterOption] = useState('Semua');
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
 
-  // Debounced/filtered standards
+  // Server-side search (debounced), same pattern as public FindingPage
+  useEffect(() => {
+    const t = setTimeout(() => {
+      if (searchQuery !== initialSearch) {
+        const params = {};
+        if (searchQuery.trim()) params.search = searchQuery.trim();
+        router.get(route('standards.index'), params, { preserveState: true, replace: true });
+      }
+    }, 500);
+    return () => clearTimeout(t);
+  }, [searchQuery]);
+
+  // Client-side docCount filter over server results
   const filteredStandards = standards.filter((std) => {
-    const matchesSearch =
-      std.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      std.description.toLowerCase().includes(searchQuery.toLowerCase());
-    return matchesSearch;
+    if (filterOption === 'Ada Dokumen' && !(std.docCount > 0)) return false;
+    if (filterOption === 'Belum Ada Dokumen' && std.docCount > 0) return false;
+    return true;
   });
+
+  const handleReset = () => {
+    setFilterOption('Semua');
+    setSearchQuery('');
+    if (initialSearch) router.get(route('standards.index'), {}, { preserveState: true, replace: true });
+  };
 
   const totalDocuments = standards.reduce((acc, curr) => acc + (curr.docCount || 0), 0);
 
@@ -83,24 +103,57 @@ export default function StandardCardGrid({
         <div className="flex items-center gap-3 w-full sm:w-auto">
           {/* Search Bar */}
           <div className="relative flex-1 sm:w-72">
-            <Search className="w-4 h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" />
+            <Search className="w-4 h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" aria-hidden="true" />
+            <label htmlFor="standard-search" className="sr-only">Cari standar</label>
             <input
-              type="text"
+              id="standard-search"
+              type="search"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Cari Standar..."
-              className="w-full pl-9 pr-4 py-2 text-xs border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#00838F] focus:border-transparent bg-white font-medium text-slate-700 shadow-2xs"
+              className="w-full pl-9 pr-4 py-2 text-xs border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#00838F] focus:border-transparent bg-white font-medium text-slate-700 shadow-2xs placeholder-gray-400"
             />
           </div>
 
           {/* Filter Option */}
-          <button
-            type="button"
-            className="flex items-center gap-2 px-3.5 py-2 text-xs font-semibold rounded-lg border border-gray-300 text-slate-700 hover:bg-gray-50 transition shadow-2xs"
-          >
-            <SlidersHorizontal className="w-4 h-4 text-[#00838F]" />
-            <span>Filter</span>
-          </button>
+          <div className="relative shrink-0">
+            <button
+              type="button"
+              onClick={() => setIsFilterOpen((v) => !v)}
+              onKeyDown={(e) => { if (e.key === 'Escape') setIsFilterOpen(false); }}
+              aria-expanded={isFilterOpen}
+              aria-haspopup="menu"
+              className="flex items-center gap-2 px-3.5 py-2 text-xs font-semibold rounded-lg border border-gray-300 text-slate-700 hover:bg-gray-50 transition shadow-2xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#00838F]"
+            >
+              <SlidersHorizontal className="w-4 h-4 text-[#00838F]" aria-hidden="true" />
+              <span>Filter{filterOption !== 'Semua' ? `: ${filterOption}` : ''}</span>
+            </button>
+            {isFilterOpen && (
+              <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-xl shadow-lg p-1.5 z-20" role="menu">
+                {['Semua', 'Ada Dokumen', 'Belum Ada Dokumen'].map((opt) => (
+                  <button
+                    key={opt}
+                    type="button"
+                    role="menuitemradio"
+                    aria-checked={filterOption === opt}
+                    onClick={() => { setFilterOption(opt); setIsFilterOpen(false); }}
+                    className={`w-full text-left px-3 py-2 text-xs font-semibold rounded-lg transition ${filterOption === opt ? 'bg-[#00838F]/10 text-[#00838F]' : 'text-slate-700 hover:bg-gray-50'}`}
+                  >
+                    {opt}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+          {(searchQuery || filterOption !== 'Semua') && (
+            <button
+              type="button"
+              onClick={handleReset}
+              className="text-xs font-bold text-slate-500 hover:text-slate-800 px-2 py-2 shrink-0 rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#00838F]"
+            >
+              Reset
+            </button>
+          )}
         </div>
 
         {/* Button + Tambah Standar */}
@@ -115,7 +168,7 @@ export default function StandardCardGrid({
       </div>
 
       {/* Grid Card Standar */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" aria-live="polite">
         {filteredStandards.map((std, index) => (
           <div
             key={std.id}
@@ -152,11 +205,11 @@ export default function StandardCardGrid({
               </div>
 
               {/* Title & Description */}
-              <h3 className="text-xl font-bold text-slate-900 tracking-tight group-hover:text-[#00838F] transition-colors">
+              <h3 className="text-xl font-bold text-slate-900 tracking-tight group-hover:text-[#00838F] transition-colors break-words">
                 {std.name}
               </h3>
-              <p className="text-xs text-gray-500 font-medium mt-1.5 line-clamp-2 leading-relaxed">
-                {std.description}
+              <p className="text-xs text-gray-500 font-medium mt-1.5 line-clamp-2 leading-relaxed break-words">
+                {std.description || 'Belum ada deskripsi.'}
               </p>
             </div>
 
@@ -185,6 +238,11 @@ export default function StandardCardGrid({
             </div>
           </div>
         ))}
+        {filteredStandards.length === 0 && (
+          <p className="md:col-span-2 lg:col-span-3 py-10 text-center text-xs text-gray-500 font-medium">
+            {searchQuery || filterOption !== 'Semua' ? 'Tidak ada standar yang cocok dengan pencarian/filter.' : 'Belum ada standar.'}
+          </p>
+        )}
       </div>
     </div>
   );

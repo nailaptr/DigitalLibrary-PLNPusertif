@@ -57,19 +57,19 @@ export default function FindingPage({ findings = {}, kpi = {}, filters = {}, opt
         {/* Header Section */}
         <div className="bg-[#127297] text-white rounded-3xl p-8 lg:p-10 shadow-xl space-y-4">
           <span className="text-xs font-bold text-[#FFE600] uppercase tracking-widest">
-            {t('findings.badge', { defaultValue: 'Monitoring' })}
+            {t('findings.badge')}
           </span>
           <h1 className="text-3xl sm:text-4xl font-extrabold">
-            {t('findings.title', { defaultValue: 'Data Temuan Audit' })}
+            {t('findings.title')}
           </h1>
           <p className="text-blue-100 text-sm max-w-2xl">
-            {t('findings.subtitle', { defaultValue: 'Pantau daftar temuan, status penyelesaian, serta ringkasan klausul.' })}
+            {t('findings.subtitle')}
           </p>
           
           {/* KPI Summary */}
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-8 pt-6 border-t border-blue-400/30">
             <div>
-               <p className="text-blue-200 text-xs font-bold uppercase tracking-wider mb-1">Total Temuan</p>
+               <p className="text-blue-200 text-xs font-bold uppercase tracking-wider mb-1">{t('findings.totalLabel')}</p>
                <p className="text-2xl font-extrabold">{kpi.total || 0}</p>
             </div>
             <div>
@@ -100,8 +100,8 @@ export default function FindingPage({ findings = {}, kpi = {}, filters = {}, opt
               <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
               <input
                 type="text"
-                aria-label="Cari Temuan"
-                placeholder={t('findings.searchPlaceholder', { defaultValue: 'Cari No. Temuan, Auditee, atau Ringkasan...' })}
+                aria-label={t('findings.searchAria')}
+                placeholder={t('findings.searchPlaceholder')}
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="w-full pl-10 pr-4 py-2.5 text-xs bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-[#00A3E0] focus:outline-none"
@@ -110,7 +110,7 @@ export default function FindingPage({ findings = {}, kpi = {}, filters = {}, opt
             
             <div className="flex w-full sm:w-auto items-center gap-3">
               <span className="text-xs font-bold text-slate-500 whitespace-nowrap">
-                {t('findings.showingText', { defaultValue: `Menampilkan ${findings.data?.length || 0} hasil` })}
+                {t('findings.showingText', { count: findings.data?.length || 0 })}
               </span>
               <button
                 type="button"
@@ -124,7 +124,7 @@ export default function FindingPage({ findings = {}, kpi = {}, filters = {}, opt
                 }`}
               >
                 <Filter className="w-4 h-4" />
-                Filter Data
+                {t('findings.filterData')}
                 {isFilterOpen ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />}
               </button>
             </div>
@@ -134,50 +134,50 @@ export default function FindingPage({ findings = {}, kpi = {}, filters = {}, opt
           {isFilterOpen && (
             <div id="filter-panel" className="mt-2 pt-4 border-t border-slate-100 grid grid-cols-1 sm:grid-cols-3 gap-4">
                <div>
-                  <label htmlFor="filter_bidang" className="block text-xs font-bold text-slate-500 mb-2 uppercase">Bidang Kerja</label>
+                  <label htmlFor="filter_bidang" className="block text-xs font-bold text-slate-500 mb-2 uppercase">{t('findings.bidangLabel')}</label>
                   <select 
                     id="filter_bidang"
                     value={filterBidang}
                     onChange={(e) => setFilterBidang(e.target.value)}
                     className="w-full text-xs border border-slate-200 rounded-lg p-2.5 focus:ring-[#00A3E0]"
                   >
-                    <option value="Semua Bidang">Semua Bidang</option>
+                    <option value="Semua Bidang">{t('findings.allBidang')}</option>
                     {options.bidang?.map((opt, i) => (
                       <option key={i} value={opt}>{opt}</option>
                     ))}
                   </select>
                </div>
                <div>
-                  <label htmlFor="filter_klausul" className="block text-xs font-bold text-slate-500 mb-2 uppercase">Klausul</label>
+                  <label htmlFor="filter_klausul" className="block text-xs font-bold text-slate-500 mb-2 uppercase">{t('findings.klausulLabel')}</label>
                   <select 
                     id="filter_klausul"
                     value={filterKlausul}
                     onChange={(e) => setFilterKlausul(e.target.value)}
                     className="w-full text-xs border border-slate-200 rounded-lg p-2.5 focus:ring-[#00A3E0]"
                   >
-                    <option value="Semua Klausul">Semua Klausul</option>
+                    <option value="Semua Klausul">{t('findings.allKlausul')}</option>
                     {options.klausul?.map((opt, i) => (
                       <option key={i} value={opt}>{opt}</option>
                     ))}
                   </select>
                </div>
                <div>
-                  <label htmlFor="filter_jenis" className="block text-xs font-bold text-slate-500 mb-2 uppercase">Jenis Temuan</label>
+                  <label htmlFor="filter_jenis" className="block text-xs font-bold text-slate-500 mb-2 uppercase">{t('findings.jenisLabel')}</label>
                   <select 
                     id="filter_jenis"
                     value={filterJenis}
                     onChange={(e) => setFilterJenis(e.target.value)}
                     className="w-full text-xs border border-slate-200 rounded-lg p-2.5 focus:ring-[#00A3E0]"
                   >
-                    <option value="Semua Jenis">Semua Jenis</option>
+                    <option value="Semua Jenis">{t('findings.allJenis')}</option>
                     <option value="major">Major</option>
                     <option value="minor">Minor</option>
                     <option value="pi">PI</option>
                   </select>
                </div>
                <div className="sm:col-span-3 flex justify-end gap-3 mt-2">
-                 <button onClick={handleResetFilter} className="px-4 py-2 bg-slate-100 text-slate-600 rounded-lg text-xs font-bold hover:bg-slate-200 transition">Reset</button>
-                 <button onClick={handleApplyFilter} className="px-4 py-2 bg-[#00A3E0] text-white rounded-lg text-xs font-bold hover:bg-[#127297] transition">Terapkan Filter</button>
+                 <button onClick={handleResetFilter} className="px-4 py-2 bg-slate-100 text-slate-600 rounded-lg text-xs font-bold hover:bg-slate-200 transition">{t('findings.reset')}</button>
+                 <button onClick={handleApplyFilter} className="px-4 py-2 bg-[#00A3E0] text-white rounded-lg text-xs font-bold hover:bg-[#127297] transition">{t('findings.applyFilter')}</button>
                </div>
             </div>
           )}
@@ -189,11 +189,11 @@ export default function FindingPage({ findings = {}, kpi = {}, filters = {}, opt
             <table className="w-full text-left text-xs border-collapse">
               <thead>
                 <tr className="bg-slate-100 text-slate-700 font-bold uppercase tracking-wider border-b border-slate-200">
-                  <th className="py-4 px-6 w-1/4">No. Temuan</th>
-                  <th className="py-4 px-4 w-32">Jenis</th>
-                  <th className="py-4 px-4">Klausul & Bidang</th>
-                  <th className="py-4 px-4">Lokasi/Auditee</th>
-                  <th className="py-4 px-6 text-right">Aksi</th>
+                  <th className="py-4 px-6 w-1/4">{t('findings.colNumber')}</th>
+                  <th className="py-4 px-4 w-32">{t('findings.colType')}</th>
+                  <th className="py-4 px-4">{t('findings.colClause')}</th>
+                  <th className="py-4 px-4">{t('findings.colLocation')}</th>
+                  <th className="py-4 px-6 text-right">{t('findings.colAction')}</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100 font-medium text-slate-700">
@@ -223,7 +223,7 @@ export default function FindingPage({ findings = {}, kpi = {}, filters = {}, opt
                       )}
                     </td>
                     <td className="py-4 px-4 space-y-1">
-                       <span className="block font-bold text-slate-800">Klausul: {finding.clause || '-'}</span>
+                       <span className="block font-bold text-slate-800">{t('findings.clauseLabel')}: {finding.clause || '-'}</span>
                        <span className="block text-slate-500">{finding.existing_work_area || '-'}</span>
                     </td>
                     <td className="py-4 px-4 font-semibold text-slate-700">
@@ -232,11 +232,11 @@ export default function FindingPage({ findings = {}, kpi = {}, filters = {}, opt
                     <td className="py-4 px-6 text-right">
                         <button
                           onClick={() => setSelectedFinding(finding)}
-                          aria-label={`Detail Temuan ${finding.finding_number}`}
+                          aria-label={`${t('findings.detailTitle')} ${finding.finding_number}`}
                           className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-slate-100 text-slate-700 rounded-lg font-bold hover:bg-slate-200 transition-colors cursor-pointer"
                         >
                           <FileText className="w-3.5 h-3.5" />
-                          <span>Detail</span>
+                          <span>{t('findings.detail')}</span>
                         </button>
                     </td>
                   </tr>
@@ -248,7 +248,7 @@ export default function FindingPage({ findings = {}, kpi = {}, filters = {}, opt
                          <div className="p-4 rounded-full bg-slate-100">
                            <FileText className="w-6 h-6 text-slate-400" />
                          </div>
-                         <p>Tidak ada data temuan yang ditemukan sesuai filter.</p>
+                         <p>{t('findings.emptyText')}</p>
                       </div>
                     </td>
                   </tr>
@@ -259,11 +259,11 @@ export default function FindingPage({ findings = {}, kpi = {}, filters = {}, opt
 
           {/* Pagination */}
           {findings.links && findings.links.length > 3 && (
-            <div className="flex items-center justify-between p-4 border-t border-slate-100 bg-slate-50/50">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 p-4 border-t border-slate-100 bg-slate-50/50">
               <span className="text-xs font-medium text-slate-500">
-                Menampilkan <span className="font-bold text-slate-700">{findings.from || 0}</span> hingga <span className="font-bold text-slate-700">{findings.to || 0}</span> dari total <span className="font-bold text-slate-700">{findings.total}</span> data
+                {t('findings.paginationInfo', { from: findings.from || 0, to: findings.to || 0, total: findings.total })}
               </span>
-              <div className="flex gap-1">
+              <div className="flex flex-wrap gap-1">
                 {findings.links.map((link, idx) => {
                   let label = link.label.replace('&laquo;', '«').replace('&raquo;', '»');
                   return (
@@ -298,12 +298,12 @@ export default function FindingPage({ findings = {}, kpi = {}, filters = {}, opt
                 <FileText className="w-32 h-32" />
               </div>
               <div className="relative z-10 flex flex-col gap-1">
-                <h2 className="text-xl font-bold text-white tracking-wide leading-tight">Detail Temuan</h2>
+                <h2 className="text-xl font-bold text-white tracking-wide leading-tight">{t('findings.detailTitle')}</h2>
                 <p className="text-blue-200 font-mono text-xs">{selectedFinding.finding_number}</p>
               </div>
               <button
                 onClick={() => setSelectedFinding(null)}
-                aria-label="Tutup Detail"
+                aria-label={t('findings.closeDetail')}
                 className="relative z-10 text-blue-200 hover:text-white transition p-2 rounded-full hover:bg-black/20"
               >
                 <X className="w-5 h-5" />
@@ -313,32 +313,32 @@ export default function FindingPage({ findings = {}, kpi = {}, filters = {}, opt
             <div className="p-6 max-h-[70vh] overflow-y-auto space-y-6">
               <div className="grid grid-cols-2 gap-4">
                  <div className="bg-slate-50 p-3 rounded-xl border border-slate-100">
-                    <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Auditee / Person</p>
+                    <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">{t('findings.auditeeLabel')}</p>
                     <p className="text-sm font-bold text-slate-800">{selectedFinding.person_name || '-'}</p>
                  </div>
                  <div className="bg-slate-50 p-3 rounded-xl border border-slate-100">
-                    <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Bidang / Lokasi</p>
+                    <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">{t('findings.areaLabel')}</p>
                     <p className="text-sm font-bold text-slate-800">{selectedFinding.existing_work_area || '-'} • {selectedFinding.location_auditee || '-'}</p>
                  </div>
               </div>
 
               <div>
-                 <p className="text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-2">Pernyataan Temuan</p>
+                 <p className="text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-2">{t('findings.findingStatement')}</p>
                  <div className="p-4 bg-blue-50/50 rounded-xl border border-blue-100 text-sm font-medium text-slate-700 leading-relaxed whitespace-pre-wrap break-words">
                    {selectedFinding.finding_statement || '-'}
                  </div>
               </div>
 
               <div>
-                 <p className="text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-2">Acuan Persyaratan (Klausul)</p>
+                 <p className="text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-2">{t('findings.requirementRef')}</p>
                  <div className="p-4 bg-slate-50 rounded-xl border border-slate-200 text-sm font-medium text-slate-700 leading-relaxed space-y-1">
-                   <p className="font-bold text-slate-900 break-words">Klausul: {selectedFinding.clause || '-'}</p>
+                   <p className="font-bold text-slate-900 break-words">{t('findings.clauseLabel')}: {selectedFinding.clause || '-'}</p>
                    <p className="whitespace-pre-wrap break-words">{selectedFinding.requirement || '-'}</p>
                  </div>
               </div>
 
               <div>
-                 <p className="text-[11px] font-bold text-red-500 uppercase tracking-wider mb-2 flex items-center gap-1"><AlertTriangle className="w-3.5 h-3.5" /> Penyebab Temuan</p>
+                 <p className="text-[11px] font-bold text-red-500 uppercase tracking-wider mb-2 flex items-center gap-1"><AlertTriangle className="w-3.5 h-3.5" /> {t('findings.causeTitle')}</p>
                  <div className="p-4 bg-red-50/50 rounded-xl border border-red-100 text-sm font-medium text-slate-700 leading-relaxed whitespace-pre-wrap break-words">
                    {selectedFinding.cause || '-'}
                  </div>
@@ -346,13 +346,13 @@ export default function FindingPage({ findings = {}, kpi = {}, filters = {}, opt
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                  <div>
-                    <p className="text-[11px] font-bold text-emerald-600 uppercase tracking-wider mb-2">Tindakan Perbaikan</p>
+                    <p className="text-[11px] font-bold text-emerald-600 uppercase tracking-wider mb-2">{t('findings.correctiveTitle')}</p>
                     <div className="p-3 bg-emerald-50/50 rounded-xl border border-emerald-100 text-xs font-medium text-slate-700 leading-relaxed h-full min-h-[4rem] whitespace-pre-wrap break-words">
                       {selectedFinding.objective_evidence || '-'}
                     </div>
                  </div>
                  <div>
-                    <p className="text-[11px] font-bold text-blue-600 uppercase tracking-wider mb-2">Tindakan Pencegahan</p>
+                    <p className="text-[11px] font-bold text-blue-600 uppercase tracking-wider mb-2">{t('findings.preventiveTitle')}</p>
                     <div className="p-3 bg-blue-50/50 rounded-xl border border-blue-100 text-xs font-medium text-slate-700 leading-relaxed h-full min-h-[4rem] whitespace-pre-wrap break-words">
                       {selectedFinding.preventive_action || '-'}
                     </div>
@@ -365,7 +365,7 @@ export default function FindingPage({ findings = {}, kpi = {}, filters = {}, opt
                   onClick={() => setSelectedFinding(null)}
                   className="px-5 py-2.5 text-xs font-bold text-slate-700 bg-white border border-slate-300 rounded-xl hover:bg-slate-100 transition-colors"
                >
-                  Tutup
+                  {t('findings.close')}
                </button>
             </div>
           </div>

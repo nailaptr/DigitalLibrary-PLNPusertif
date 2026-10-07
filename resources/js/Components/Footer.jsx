@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from '@inertiajs/react';
 import { Globe, Mail, Phone, MapPin, ExternalLink } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import { siteConfig } from '@/config/site';
 
 export default function Footer() {
   const { t } = useTranslation();
@@ -39,7 +40,7 @@ export default function Footer() {
 
             <div className="flex items-center gap-3">
               <a
-                href="https://pusertif.pln.co.id"
+                href={siteConfig.support.websiteUrl}
                 target="_blank"
                 rel="noreferrer"
                 className="w-10 h-10 rounded-full bg-white text-[#00A3E0] border border-slate-200 flex items-center justify-center hover:bg-[#00A3E0] hover:text-white shadow-xs transition-colors"
@@ -49,7 +50,7 @@ export default function Footer() {
               </a>
 
               <a
-                href="mailto:support@pusertif.pln.co.id"
+                href={`mailto:${siteConfig.support.supportEmail}`}
                 className="w-10 h-10 rounded-full bg-white text-[#00A3E0] border border-slate-200 flex items-center justify-center hover:bg-[#00A3E0] hover:text-white shadow-xs transition-colors"
                 title="Email Support"
               >
@@ -57,7 +58,7 @@ export default function Footer() {
               </a>
 
               <a
-                href="tel:+62217982245"
+                href={`tel:${siteConfig.support.servicePhone}`}
                 className="w-10 h-10 rounded-full bg-white text-[#00A3E0] border border-slate-200 flex items-center justify-center hover:bg-[#00A3E0] hover:text-white shadow-xs transition-colors"
                 title="Telepon Layanan"
               >
@@ -101,23 +102,26 @@ export default function Footer() {
           <div className="flex items-start gap-3 mb-4 text-xs sm:text-sm text-slate-600 leading-relaxed">
             <MapPin className="w-5 h-5 text-[#00A3E0] shrink-0 mt-0.5" />
             <span>
-              Pusat Sertifikasi (Pusertif) PT PLN (Persero),<br />
-              Jl. Laboratorium No. 1, Duren Tiga, Pancoran,<br />
-              Jakarta Selatan 12760, Indonesia
+              {siteConfig.location.addressLines.map((line, i) => (
+                <React.Fragment key={i}>
+                  {line}
+                  {i < siteConfig.location.addressLines.length - 1 && <br />}
+                </React.Fragment>
+              ))}
             </span>
           </div>
 
           <div className="w-full h-32 rounded-xl overflow-hidden border border-slate-300 shadow-sm relative group bg-slate-200">
             <iframe
               title="Peta Lokasi PLN Pusertif"
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3966.115764020967!2d106.83789537499066!3d-6.248473793739775!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e69f3d9bfa2dbb5%3A0xb3fffa0018a1a3bf!2sPT%20PLN%20(Persero)%20Pusat%20Sertifikasi!5e0!3m2!1sid!2sid!4v1700000000000!5m2!1sid!2sid"
+              src={siteConfig.location.mapEmbedUrl}
               className="w-full h-full border-0 grayscale group-hover:grayscale-0 transition-all duration-300 pointer-events-auto"
               allowFullScreen=""
               loading="lazy"
               referrerPolicy="no-referrer-when-downgrade"
             />
             <a
-              href="https://maps.google.com/?q=PT+PLN+(Persero)+Pusat+Sertifikasi+Jakarta"
+              href={siteConfig.location.mapLinkUrl}
               target="_blank"
               rel="noreferrer"
               className="absolute bottom-2 right-2 bg-white/90 backdrop-blur-xs text-[10px] font-bold text-[#00A3E0] px-2 py-1 rounded-md shadow-xs flex items-center gap-1 hover:bg-[#00A3E0] hover:text-white transition-colors"

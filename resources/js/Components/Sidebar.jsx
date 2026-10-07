@@ -24,31 +24,36 @@ export default function Sidebar({ activeItem = 'Overview', onSelectMenu }) {
   const { auth } = usePage().props;
   const user = auth?.user || { name: 'User', email: '' };
   const userRole = user.roles && user.roles.length > 0 ? user.roles[0].name : 'User';
+  const permissions = auth?.permissions || [];
+
+  const hasPermission = (perm) => {
+    return permissions.includes(perm) || userRole === 'Admin';
+  };
 
   const menuGroups = [
     {
       group: 'Dashboard',
       items: [
-        { name: 'Overview', icon: LayoutDashboard, path: route ? route('dashboard') : '#' },
-        { name: 'Log Aktivitas', icon: History, path: route ? route('activity_logs.index') : '/activity-logs' },
-        { name: 'Manajemen User', icon: Users, path: route ? route('users.index') : '/users' },
+        { name: 'Overview', icon: LayoutDashboard, path: route ? route('dashboard') : '#', show: hasPermission('view dashboard') },
+        { name: 'Log Aktivitas', icon: History, path: route ? route('activity_logs.index') : '/activity-logs', show: hasPermission('view activity log') },
+        { name: 'Manajemen User', icon: Users, path: route ? route('users.index') : '/users', show: hasPermission('manage users') },
       ],
     },
     {
       group: 'Manajemen Konten',
       items: [
-        { name: 'Dokumen', icon: FileText, path: route ? route('documents.index') : '/documents' },
-        { name: 'Sertifikat', icon: Award, path: route ? route('certificates.index') : '/certificates' },
-        { name: 'Standar', icon: Layers, path: route ? route('standards.index') : '/standards' },
-        { name: 'Status Dokumen', icon: FileCheck, path: '#' },
-        { name: 'FAQ', icon: HelpCircle, path: '#' },
+        { name: 'Dokumen', icon: FileText, path: route ? route('documents.index') : '/documents', show: hasPermission('manage documents') },
+        { name: 'Sertifikat', icon: Award, path: route ? route('certificates.index') : '/certificates', show: hasPermission('manage certificates') },
+        { name: 'Standar', icon: Layers, path: route ? route('standards.index') : '/standards', show: hasPermission('manage standards') },
+        { name: 'Status Dokumen', icon: FileCheck, path: '#', show: hasPermission('manage documents') || hasPermission('review documents') },
+        { name: 'FAQ', icon: HelpCircle, path: '#', show: true },
       ],
     },
     {
       group: 'Monitoring Temuan',
       items: [
-        { name: 'Overview Temuan', icon: BarChart2, path: route ? route('findings.overview') : '/findings/overview' },
-        { name: 'Data Temuan', icon: FileCheck, path: route ? route('findings.index') : '/findings' },
+        { name: 'Overview Temuan', icon: BarChart2, path: route ? route('findings.overview') : '/findings/overview', show: hasPermission('manage findings') },
+        { name: 'Data Temuan', icon: FileCheck, path: route ? route('findings.index') : '/findings', show: hasPermission('manage findings') },
       ],
     },
   ];
@@ -142,14 +147,18 @@ export default function Sidebar({ activeItem = 'Overview', onSelectMenu }) {
 
           {/* Navigation Menu List */}
           <nav className="p-3 space-y-6 overflow-y-auto max-h-[calc(100vh-210px)]">
-            {menuGroups.map((group, groupIdx) => (
+            {menuGroups.map((group, groupIdx) => {
+              const visibleItems = group.items.filter(item => item.show !== false);
+              if (visibleItems.length === 0) return null;
+
+              return (
               <div key={groupIdx} className="space-y-1.5">
                 {!collapsed && (
                   <p className="px-3 text-[11px] font-bold text-slate-400 uppercase tracking-wider">
                     {group.group}
                   </p>
                 )}
-                {group.items.map((item) => {
+                {visibleItems.map((item) => {
                   const Icon = item.icon;
                   const isActive = activeItem === item.name;
                   return (
@@ -180,7 +189,8 @@ export default function Sidebar({ activeItem = 'Overview', onSelectMenu }) {
                   );
                 })}
               </div>
-            ))}
+              );
+            })}
           </nav>
         </div>
 

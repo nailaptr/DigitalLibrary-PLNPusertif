@@ -1,8 +1,14 @@
 import React from 'react';
 import { ArrowRight, FileText, Clock, Tag } from 'lucide-react';
 
-export default function DocumentSection({ stats = {} }) {
-  const documents = stats.recentlyAdded || [];
+export default function DocumentSection({ stats = {}, filter = '' }) {
+  const q = filter.trim().toLowerCase();
+  const documents = (stats.recentlyAdded || []).filter((doc) =>
+    !q ||
+    doc.title?.toLowerCase().includes(q) ||
+    doc.note?.toLowerCase().includes(q) ||
+    (doc.tags || []).some((tag) => tag.toLowerCase().includes(q))
+  );
 
   const documentStats = [
     { label: 'Jumlah Dokumen', count: stats.totalDocuments || 0 },
@@ -32,7 +38,7 @@ export default function DocumentSection({ stats = {} }) {
         </div>
 
         {/* List 3 Cards Dokumen */}
-        <div className="space-y-3.5">
+        <div className="space-y-3.5" aria-live="polite">
           {documents.map((doc) => (
             <div
               key={doc.id}
@@ -43,7 +49,7 @@ export default function DocumentSection({ stats = {} }) {
                   <div className="w-7 h-7 rounded-lg bg-[#00A2B9]/10 text-[#00A2B9] flex items-center justify-center">
                     <FileText className="w-4 h-4" />
                   </div>
-                  <h3 className="font-bold text-slate-800 text-base">{doc.title}</h3>
+                  <h3 className="font-bold text-slate-800 text-base break-words">{doc.title}</h3>
                 </div>
 
                 <div className="flex items-center gap-3">
@@ -79,11 +85,16 @@ export default function DocumentSection({ stats = {} }) {
               </div>
 
               {/* Catatan */}
-              <p className="text-xs text-gray-500 mt-2 font-normal">
+              <p className="text-xs text-gray-500 mt-2 font-normal break-words">
                 {doc.note}
               </p>
             </div>
           ))}
+          {documents.length === 0 && (
+            <p className="py-8 text-center text-xs text-gray-500 font-medium">
+              {q ? 'Tidak ada dokumen yang cocok dengan pencarian.' : 'Belum ada dokumen terbaru.'}
+            </p>
+          )}
         </div>
       </div>
 

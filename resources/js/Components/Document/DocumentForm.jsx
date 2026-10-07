@@ -44,7 +44,9 @@ export default function DocumentForm({
   );
   const [jenis, setJenis] = useState(documentData?.jenis || 'Manual');
   const [bidang, setBidang] = useState(documentData?.bidang || 'Bidang A');
-  const [status, setStatus] = useState(documentData?.status || 'Draft');
+  const [status, setStatus] = useState(
+    ['relevan', 'tidak_relevan'].includes(documentData?.status) ? documentData.status : 'relevan'
+  );
   const [note, setNote] = useState(documentData?.note || '');
   const [uploadedFile, setUploadedFile] = useState(documentData?.fileName || null);
 
@@ -214,16 +216,17 @@ export default function DocumentForm({
                       </select>
                     </div>
 
-                    {/* Klausul */}
+                    {/* Klausul (Opsional) */}
                     <div>
                       <label className="block text-[11px] font-bold text-slate-700 mb-1">
-                        Klausul <span className="text-red-500">*</span>
+                        Klausul <span className="text-gray-400 font-semibold">(Opsional)</span>
                       </label>
                       <select
                         value={row.clause}
                         onChange={(e) => handleStandarAcuanRowChange(row.id, 'clause', e.target.value)}
                         className="w-full px-3 py-2 text-xs border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#00838F] font-semibold text-slate-800 bg-white"
                       >
+                        <option value="">—</option>
                         <option value="Klausul 4: Konteks Organisasi">Klausul 4: Konteks Organisasi</option>
                         <option value="Klausul 5: Kepemimpinan">Klausul 5: Kepemimpinan</option>
                         <option value="Klausul 6: Perencanaan">Klausul 6: Perencanaan</option>
@@ -232,16 +235,17 @@ export default function DocumentForm({
                       </select>
                     </div>
 
-                    {/* Sub Klausul */}
+                    {/* Sub Klausul (Opsional) */}
                     <div>
                       <label className="block text-[11px] font-bold text-slate-700 mb-1">
-                        Sub Klausul <span className="text-red-500">*</span>
+                        Sub Klausul <span className="text-gray-400 font-semibold">(Opsional)</span>
                       </label>
                       <select
                         value={row.subClause}
                         onChange={(e) => handleStandarAcuanRowChange(row.id, 'subClause', e.target.value)}
                         className="w-full px-3 py-2 text-xs border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#00838F] font-semibold text-slate-800 bg-white"
                       >
+                        <option value="">—</option>
                         <option value="Sub 4.1: Memahami Organisasi & Konteksnya">Sub 4.1: Memahami Organisasi & Konteksnya</option>
                         <option value="Sub 4.2: Memahami Kebutuhan Pihak Berkepentingan">Sub 4.2: Memahami Kebutuhan Pihak Berkepentingan</option>
                         <option value="Sub 5.1: Kepemimpinan & Komitmen">Sub 5.1: Kepemimpinan & Komitmen</option>
@@ -363,19 +367,16 @@ export default function DocumentForm({
                 onChange={(e) => setStatus(e.target.value)}
                 className="w-full px-4 py-2.5 text-sm border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#00838F] font-bold text-slate-800 bg-white"
               >
-                <option value="Draft">Draft</option>
-                <option value="Relevan">Relevan</option>
-                <option value="Pending">Pending</option>
-                <option value="Revisi">Revisi</option>
-                <option value="Tidak Relevan">Tidak Relevan</option>
+                <option value="relevan">Relevan</option>
+                <option value="tidak_relevan">Tidak Relevan</option>
               </select>
             </div>
           </div>
 
-          {/* SECTION 3: Upload Dokumen PDF Drag & Drop Zone */}
+          {/* SECTION 3: Upload Dokumen Drag & Drop Zone */}
           <div>
             <label className="block text-xs font-bold text-slate-800 mb-1.5">
-              Upload Dokumen (PDF Max 100MB) <span className="text-red-500">*</span>
+              Upload Dokumen (PDF/DOC/XLS, maks 20MB)
             </label>
             
             <div
@@ -385,7 +386,7 @@ export default function DocumentForm({
             >
               <input
                 type="file"
-                accept=".pdf"
+                accept=".pdf,.doc,.docx,.xls,.xlsx"
                 onChange={handleFileDrop}
                 className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
               />
@@ -405,10 +406,10 @@ export default function DocumentForm({
               ) : (
                 <>
                   <p className="text-sm font-bold text-slate-800">
-                    Tarik & Lepaskan berkas PDF di sini, atau <span className="text-[#00838F] underline">klik untuk mengunggah</span>
+                    Tarik & Lepaskan berkas di sini, atau <span className="text-[#00838F] underline">klik untuk mengunggah</span>
                   </p>
                   <p className="text-xs text-gray-400 mt-1 font-medium">
-                    Hanya menerima format berkas PDF dengan batas ukuran maksimum 100MB.
+                    Hanya menerima PDF/DOC/XLS dengan batas ukuran maksimum 20MB. Kosongkan untuk memakai berkas lama (mode edit).
                   </p>
                 </>
               )}

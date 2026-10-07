@@ -10,6 +10,7 @@ export default function StandardModal({
 }) {
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
+  const [formError, setFormError] = useState('');
 
   useEffect(() => {
     if (standard && mode === 'edit') {
@@ -19,6 +20,7 @@ export default function StandardModal({
       setName('');
       setDescription('');
     }
+    setFormError('');
   }, [standard, mode, isOpen]);
 
   if (!isOpen) return null;
@@ -39,12 +41,16 @@ export default function StandardModal({
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!name.trim() || !description.trim()) return;
+    if (!name.trim()) {
+      setFormError('Nama standar wajib diisi.');
+      return;
+    }
+    setFormError('');
 
     onSave({
       ...standard,
-      name,
-      description,
+      name: name.trim(),
+      description: description.trim(),
     });
   };
 
@@ -97,18 +103,17 @@ export default function StandardModal({
             />
           </div>
 
-          {/* Field 2: Deskripsi Standar */}
+          {/* Field 2: Deskripsi Standar (Opsional) */}
           <div>
             <div className="flex items-center justify-between mb-1.5">
               <label className="block text-xs font-bold text-slate-800">
-                Deskripsi Standar <span className="text-red-500">*</span>
+                Deskripsi Standar <span className="text-gray-400 font-semibold">(Opsional)</span>
               </label>
               <span className="text-[11px] font-semibold text-gray-400">
                 {description.length}/{MAX_CHAR} Karakter
               </span>
             </div>
             <textarea
-              required
               rows={3}
               maxLength={MAX_CHAR}
               value={description}
@@ -117,6 +122,12 @@ export default function StandardModal({
               className="w-full px-4 py-2.5 text-sm border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#00838F] focus:border-transparent font-medium text-slate-800 bg-white resize-none"
             />
           </div>
+
+          {formError && (
+            <p className="text-xs font-semibold text-red-600 bg-red-50 border border-red-200 rounded-lg px-3 py-2" role="alert">
+              {formError}
+            </p>
+          )}
 
           {/* Audit Log Section (Read-Only) for Edit Mode */}
           {isEdit && (

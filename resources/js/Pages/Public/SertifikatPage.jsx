@@ -29,7 +29,7 @@ export default function SertifikatPage({ certificateList = [] }) {
   return (
     <PublicLayout>
 
-    <div className="w-full space-y-10 pb-16 font-sans max-w-7xl mx-auto px-4 sm:px-8 mt-4">
+    <div className="w-full space-y-8 pb-12 font-sans max-w-7xl mx-auto px-4 sm:px-8 mt-4">
       {/* ========================================================= */}
       {/* BANNER HEADER SECTION                                     */}
       {/* ========================================================= */}
@@ -38,10 +38,10 @@ export default function SertifikatPage({ certificateList = [] }) {
         <div className="absolute -left-16 -bottom-16 w-80 h-80 rounded-full bg-white/10 blur-2xl pointer-events-none" />
 
         <div className="relative z-10 max-w-3xl space-y-3">
-          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight">
+          <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight">
             {t('certificates.title')}
           </h1>
-          <p className="text-blue-50 text-sm sm:text-base leading-relaxed opacity-95">
+          <p className="text-blue-100 text-sm sm:text-base leading-relaxed max-w-2xl">
             {t('certificates.subtitle')}
           </p>
         </div>

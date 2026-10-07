@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import PublicLayout from '@/Layouts/PublicLayout';
 import { Head } from '@inertiajs/react';
 import {
-  CheckCircle,
+  CheckCircle2,
   MoreVertical,
   ChevronDown
 } from 'lucide-react';
@@ -37,10 +37,10 @@ export default function Overview({ stats = {}, donutData = [], lineData = [] }) 
             <div className="absolute -left-16 -bottom-16 w-80 h-80 rounded-full bg-white/10 blur-2xl pointer-events-none" />
 
             <div className="relative z-10 max-w-3xl space-y-2">
-              <h1 className="text-3xl font-bold text-white mb-2">
+              <h1 className="text-3xl sm:text-4xl font-extrabold">
                 {t('overview.title')}
               </h1>
-              <p className="text-white/90 text-sm leading-relaxed">
+              <p className="text-white/90 text-sm leading-relaxed max-w-2xl">
                 {t('overview.subtitle')}
               </p>
             </div>
@@ -50,8 +50,10 @@ export default function Overview({ stats = {}, donutData = [], lineData = [] }) 
           {/* SECTION 1: INDIKATOR KEPATUHAN STANDAR (3 SUMMARY CARDS) */}
           {/* ========================================================= */}
           <div className="space-y-4">
-            <h2 className="text-xl font-bold text-slate-800 flex items-center gap-2 mb-4">
-              <CheckCircle className="w-5 h-5 text-[#00A3E0]" />
+            <h2 className="text-xl font-bold text-slate-800 tracking-tight flex items-center gap-2.5 mb-4">
+              <span className="w-8 h-8 rounded-full bg-blue-50 border border-blue-200 flex items-center justify-center text-[#00A3E0] shrink-0">
+                <CheckCircle2 className="w-5 h-5 fill-[#00A3E0] text-white" />
+              </span>
               <span>{t('overview.sectionTitle')}</span>
             </h2>
 

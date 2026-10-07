@@ -9,6 +9,8 @@ import { router } from '@inertiajs/react';
 
 export default function OverviewDashboard({ auth, stats }) {
   const [activeMenu, setActiveMenu] = useState('Overview');
+  const [query, setQuery] = useState('');
+  const todayLabel = new Date().toLocaleDateString('id-ID', { year: 'numeric', month: 'short', day: 'numeric' });
 
   const handleSelectMenu = (name) => {
     setActiveMenu(name);
@@ -35,24 +37,28 @@ export default function OverviewDashboard({ auth, stats }) {
             </div>
 
             {/* Quick Actions / Date & Search */}
-            <div className="flex items-center gap-3">
-              <div className="relative hidden sm:block">
-                <Search className="w-4 h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" />
+            <div className="flex flex-wrap items-center gap-3">
+              <div className="relative w-full sm:w-auto order-last sm:order-first">
+                <Search className="w-4 h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+                <label htmlFor="dashboard-search" className="sr-only">Cari dokumen</label>
                 <input
-                  type="text"
+                  id="dashboard-search"
+                  type="search"
                   placeholder="Cari dokumen..."
-                  className="pl-9 pr-4 py-2 bg-white text-xs border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#00A2B9] focus:border-transparent w-48 shadow-2xs transition-all"
+                  value={query}
+                  onChange={(e) => setQuery(e.target.value)}
+                  className="w-full sm:w-48 pl-9 pr-4 py-2 bg-white text-xs border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#00A2B9] focus:border-transparent shadow-2xs transition-all text-slate-800 placeholder-gray-400"
                 />
               </div>
 
-              <button className="flex items-center gap-2 bg-white border border-gray-200 text-xs font-semibold text-slate-700 px-3.5 py-2 rounded-lg hover:bg-slate-50 transition shadow-2xs">
-                <Calendar className="w-4 h-4 text-[#00A2B9]" />
-                <span>{new Date().toLocaleDateString('id-ID', { year: 'numeric', month: 'short', day: 'numeric' })}</span>
+              <button type="button" title={todayLabel} aria-label={`Tanggal hari ini: ${todayLabel}`} className="flex items-center gap-2 bg-white border border-gray-200 text-xs font-semibold text-slate-700 px-3.5 py-2 rounded-lg hover:bg-slate-50 transition shadow-2xs whitespace-nowrap focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#00A2B9] cursor-default">
+                <Calendar className="w-4 h-4 text-[#00A2B9]" aria-hidden="true" />
+                <span>{todayLabel}</span>
               </button>
 
-              <button className="relative bg-white border border-gray-200 text-slate-600 p-2 rounded-lg hover:bg-slate-50 transition shadow-2xs">
-                <Bell className="w-4 h-4" />
-                <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full animate-pulse"></span>
+              <button type="button" title="Notifikasi" aria-label="Notifikasi" className="relative bg-white border border-gray-200 text-slate-600 p-2 rounded-lg hover:bg-slate-50 transition shadow-2xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#00A2B9]">
+                <Bell className="w-4 h-4" aria-hidden="true" />
+                <span aria-hidden="true" className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full animate-pulse"></span>
               </button>
             </div>
           </div>
@@ -64,7 +70,7 @@ export default function OverviewDashboard({ auth, stats }) {
           <ChartSection stats={stats} />
 
           {/* Section E: Bottom Section: Recent Documents & Document Stats */}
-          <DocumentSection stats={stats} />
+          <DocumentSection stats={stats} filter={query} />
         </main>
       </div>
     </AuthenticatedLayout>

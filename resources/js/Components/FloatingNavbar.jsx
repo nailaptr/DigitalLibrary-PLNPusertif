@@ -21,7 +21,7 @@ export default function FloatingNavbar() {
     { path: '/sertifikat', label: t('navbar.sertifikat') },
     { path: '/standar', label: t('navbar.standar') },
     { path: '/dokumen', label: t('navbar.dokumen') },
-    { path: '/temuan', label: t('navbar.temuan', { defaultValue: 'Temuan' }) },
+    { path: '/temuan', label: t('navbar.temuan') },
   ];
 
   return (

@@ -1,7 +1,7 @@
 import PublicLayout from '@/Layouts/PublicLayout';
 import React, { useState } from 'react';
 import { router } from '@inertiajs/react';
-import { CheckCircle, Search, SlidersHorizontal } from 'lucide-react';
+import { CheckCircle2, Search, SlidersHorizontal } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
 
@@ -27,10 +27,10 @@ export default function StandarView({ standardsList = [] }) {
           <div className="absolute -left-16 -bottom-16 w-80 h-80 rounded-full bg-white/10 blur-2xl pointer-events-none" />
 
           <div className="relative z-10 max-w-3xl space-y-2">
-            <h1 className="text-3xl font-bold text-white mb-2">
+            <h1 className="text-3xl sm:text-4xl font-extrabold">
               {t('standards.title')}
             </h1>
-            <p className="text-white/90 text-sm leading-relaxed">
+            <p className="text-white/90 text-sm leading-relaxed max-w-2xl">
               {t('standards.subtitle')}
             </p>
           </div>
@@ -38,9 +38,11 @@ export default function StandarView({ standardsList = [] }) {
 
         {/* CONTROLS BAR */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-          <div className="flex items-center gap-2">
-            <CheckCircle className="w-5 h-5 text-[#00A3E0]" />
-            <h2 className="text-xl font-bold text-slate-800">
+          <div className="flex items-center gap-2.5">
+            <div className="w-8 h-8 rounded-full bg-blue-50 border border-blue-200 flex items-center justify-center text-[#00A3E0]">
+              <CheckCircle2 className="w-5 h-5 fill-[#00A3E0] text-white" />
+            </div>
+            <h2 className="text-xl font-bold text-slate-800 tracking-tight">
               {t('overview.sectionTitle')}
             </h2>
           </div>
@@ -48,13 +50,13 @@ export default function StandarView({ standardsList = [] }) {
           <div className="flex items-center gap-3 self-start md:self-auto w-full md:w-auto">
             <button
               onClick={() => setIsFilterOpen(!isFilterOpen)}
-              className="rounded-full border border-slate-200 bg-white px-6 py-2 flex items-center gap-2 text-xs font-semibold text-slate-600 hover:border-cyan-500 shadow-sm cursor-pointer shrink-0 transition-colors"
+              className="rounded-full border border-slate-200 bg-white px-6 py-2 flex items-center gap-2 text-xs font-semibold text-slate-600 hover:border-[#00A3E0] hover:text-[#00A3E0] shadow-sm cursor-pointer shrink-0 transition-colors"
             >
               <SlidersHorizontal className="w-4 h-4 text-slate-500" />
               <span>{t('standards.filterTitle')}</span>
             </button>
 
-            <div className="rounded-full border border-slate-200 bg-white px-6 py-2 flex items-center gap-2 text-slate-400 w-72 sm:w-80 focus-within:border-cyan-500 shadow-sm transition-all">
+            <div className="rounded-full border border-slate-200 bg-white px-6 py-2 flex items-center gap-2 text-slate-400 w-72 sm:w-80 focus-within:border-[#00A3E0] focus-within:ring-2 focus-within:ring-[#00A3E0]/20 shadow-sm transition-all">
               <Search className="w-4 h-4 text-slate-400 shrink-0" />
               <input
                 type="text"

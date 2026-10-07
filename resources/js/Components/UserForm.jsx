@@ -19,18 +19,31 @@ export default function UserForm({
 
   const [showPassword, setShowPassword] = useState(false);
 
-  // Password Validation Logic
+  // Password Validation Logic (mirrors backend: min 8, letters + numbers, confirmed)
   const hasLetterAndNumber =
     /[a-zA-Z]/.test(formData.password) && /\d/.test(formData.password);
   const isEightChars = formData.password.length >= 8;
+  const needsPasswordCheck = mode === 'add' || formData.password.length > 0;
+  const doPasswordsMatch =
+    !needsPasswordCheck || formData.password === formData.password_confirmation;
+  const [matchError, setMatchError] = useState('');
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
+    if (name === 'password' || name === 'password_confirmation') setMatchError('');
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    if (needsPasswordCheck && !(hasLetterAndNumber && isEightChars)) {
+      setMatchError('Password minimal 8 karakter dan mengandung huruf dan angka.');
+      return;
+    }
+    if (needsPasswordCheck && formData.password !== formData.password_confirmation) {
+      setMatchError('Konfirmasi password tidak cocok.');
+      return;
+    }
     onSave({
       ...user,
       ...formData,
@@ -131,7 +144,8 @@ export default function UserForm({
             </div>
 
             {/* Password Requirements Helper Text */}
-            <div className="mt-2.5 space-y-1">
+            {needsPasswordCheck && (
+            <div className="mt-2.5 space-y-1" aria-live="polite">
               <div className={`flex items-center gap-1.5 text-xs font-medium ${hasLetterAndNumber ? 'text-emerald-600 font-semibold' : 'text-gray-400'}`}>
                 <span className={`w-3.5 h-3.5 rounded-full flex items-center justify-center text-[10px] ${hasLetterAndNumber ? 'bg-emerald-100 text-emerald-700' : 'bg-gray-200 text-gray-500'}`}>
                   ✓
@@ -145,6 +159,12 @@ export default function UserForm({
                 <span>Terdiri dari 8 karakter</span>
               </div>
             </div>
+            )}
+            {!doPasswordsMatch && formData.password_confirmation.length > 0 && (
+              <p className="mt-2 text-xs font-medium text-red-600" role="alert">
+                Konfirmasi password tidak cocok.
+              </p>
+            )}
           </div>
           
           {/* Password Confirmation */}
@@ -206,20 +226,27 @@ export default function UserForm({
         </div>
 
         {/* Form Footer Buttons (Kanan Bawah) */}
-        <div className="pt-4 border-t border-gray-100 flex items-center justify-end gap-3">
+        <div className="pt-4 border-t border-gray-100">
+          {matchError && (
+            <p className="mb-3 text-xs font-semibold text-red-600 bg-red-50 border border-red-200 rounded-lg px-3 py-2" role="alert">
+              {matchError}
+            </p>
+          )}
+          <div className="flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-end gap-3">
           <button
             type="button"
             onClick={onCancel}
-            className="px-5 py-2.5 text-xs font-bold border border-gray-300 text-slate-700 hover:bg-gray-50 rounded-lg transition"
+            className="px-5 py-2.5 text-xs font-bold border border-gray-300 text-slate-700 hover:bg-gray-50 rounded-lg transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#00838F]"
           >
             Batal
           </button>
           <button
             type="submit"
-            className="px-5 py-2.5 text-xs font-bold bg-[#00838F] hover:bg-[#007A87] text-white rounded-lg transition shadow-xs"
+            className="px-5 py-2.5 text-xs font-bold bg-[#00838F] hover:bg-[#007A87] text-white rounded-lg transition shadow-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#00838F] focus-visible:ring-offset-2"
           >
             {mode === 'edit' ? 'Edit User' : 'Simpan'}
           </button>
+          </div>
         </div>
       </form>
     </div>

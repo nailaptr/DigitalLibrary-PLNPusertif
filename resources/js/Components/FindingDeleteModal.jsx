@@ -2,7 +2,7 @@ import React from 'react';
 import Modal from './Modal';
 import { AlertTriangle, Trash2, X } from 'lucide-react';
 
-export default function FindingDeleteModal({ isOpen, onClose, finding, onConfirmDelete }) {
+export default function FindingDeleteModal({ isOpen, onClose, finding, isDeleting = false, onConfirmDelete }) {
   if (!finding) return null;
 
   return (
@@ -43,20 +43,22 @@ export default function FindingDeleteModal({ isOpen, onClose, finding, onConfirm
         </div>
 
         {/* Actions */}
-        <div className="bg-gray-50 px-6 py-4 flex items-center justify-end gap-3 border-t border-gray-200">
+        <div className="bg-gray-50 px-6 py-4 flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-end gap-3 border-t border-gray-200">
           <button
             type="button"
             onClick={onClose}
-            className="px-4 py-2 text-sm font-semibold text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition"
+            disabled={isDeleting}
+            className="px-4 py-2 text-sm font-semibold text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition disabled:opacity-50"
           >
             Batal
           </button>
           <button
             type="button"
             onClick={() => onConfirmDelete(finding.id)}
-            className="px-4 py-2 text-sm font-semibold text-white bg-red-600 rounded-lg hover:bg-red-700 transition shadow-sm"
+            disabled={isDeleting}
+            className="px-4 py-2 text-sm font-semibold text-white bg-red-600 rounded-lg hover:bg-red-700 transition shadow-sm disabled:opacity-60"
           >
-            Ya, Hapus Data
+            {isDeleting ? 'Menghapus...' : 'Ya, Hapus Data'}
           </button>
         </div>
       </div>

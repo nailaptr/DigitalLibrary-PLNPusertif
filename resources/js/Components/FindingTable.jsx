@@ -336,11 +336,11 @@ export default function FindingTable({
 
         {/* Pagination */}
         {findings.links && findings.links.length > 3 && (
-          <div className="flex items-center justify-between pt-4 border-t border-gray-100">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 pt-4 border-t border-gray-100">
             <span className="text-xs text-gray-500">
               Menampilkan {findings.from || 0} hingga {findings.to || 0} dari {findings.total} data
             </span>
-            <div className="flex gap-1">
+            <div className="flex flex-wrap gap-1">
               {findings.links.map((link, idx) => {
                 // Skip the Next/Prev text labels if you want to use icons, or just render them as-is.
                 let label = link.label.replace('&laquo;', '«').replace('&raquo;', '»');

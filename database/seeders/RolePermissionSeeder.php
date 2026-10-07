@@ -19,12 +19,14 @@ use Illuminate\Support\Facades\Hash;
  *   3. Permission baru ditambahkan: manage certificates, manage standards,
  *      view activity log (GAP §4.2 — permission yang sebelumnya samar)
  *
- * Matriks akhir per PRD §4 & CLAUDE.md:
+ * Matriks akhir per PRD §4 & CLAUDE.md (+ AI-CONTEXT repair scope):
  *   Admin   : semua permission
  *   Manager : view dashboard, manage documents, manage certificates,
- *             manage standards, view statistics
+ *             manage standards, view statistics,
+ *             + manage users, view activity log, manage findings (repair scope)
  *   Staff   : view dashboard, manage documents, manage certificates,
- *             manage standards, view statistics, review documents
+ *             manage standards, view statistics, review documents,
+ *             manage findings (repair scope)
  *   Guest   : tidak ada permission (akses publik tidak via Spatie)
  */
 class RolePermissionSeeder extends Seeder
@@ -55,10 +57,11 @@ class RolePermissionSeeder extends Seeder
             // Log aktivitas (PRD §8 Fitur 14, khusus Admin) — ditambahkan per GAP §4.2
             'view activity log',      // Melihat riwayat log aktivitas
 
-            // Review dokumen (PRD §8 Fitur 10) — FASE 2, dideklarasikan sekarang
-            // agar assignment role sudah benar saat Fase 2 dibangun.
-            // PRD §4: "Hanya Staff yang mereview dokumen" — Manager TIDAK dapat ini.
-            'review documents',       // Staff mereview & menentukan status dokumen (Fase 2)
+            // Review dokumen (PRD §8 Fitur 10)
+            'review documents',
+
+            // Monitoring temuan
+            'manage findings',
         ];
 
         foreach ($permissions as $permission) {
@@ -82,10 +85,12 @@ class RolePermissionSeeder extends Seeder
         $managerRole->syncPermissions([
             'view dashboard',
             'view statistics',        // PRD §4: Manager "Lihat Dashboard Statistik"
-            'manage documents',       // PRD §4: Manager "Menambah, mengelola, mengedit Dokumen"
-            'manage certificates',    // PRD §4: Manager "Menambah, mengelola, mengedit Sertifikat"
-            'manage standards',       // PRD §8 Fitur 7: Manager bisa kelola standar
-            // 'review documents' TIDAK ada di Manager — PRD v1.2 §4 & GAP §1.1
+            'manage documents',
+            'manage certificates',
+            'manage standards',
+            'manage users',           // Per AI-CONTEXT repair scope
+            'view activity log',      // Per AI-CONTEXT repair scope
+            'manage findings',        // Per AI-CONTEXT repair scope
         ]);
 
         // ─────────────────────────────────────────────────────────────────────
@@ -102,7 +107,8 @@ class RolePermissionSeeder extends Seeder
             'manage documents',
             'manage certificates',
             'manage standards',
-            'review documents',       // GAP §1.1 — dipindah dari Manager ke Staff
+            'review documents',
+            'manage findings',
         ]);
 
         // ─────────────────────────────────────────────────────────────────────

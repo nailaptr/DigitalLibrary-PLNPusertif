@@ -5,7 +5,7 @@ import TextInput from './TextInput';
 import InputError from './InputError';
 import Checkbox from './Checkbox';
 
-export default function FindingForm({ mode = 'add', finding = null, onSave, onCancel }) {
+export default function FindingForm({ mode = 'add', finding = null, errors = {}, isSubmitting = false, onSave, onCancel }) {
   const [data, setData] = useState({
     finding_number: finding?.finding_number || '',
     person_name: finding?.person_name || '',
@@ -51,6 +51,11 @@ export default function FindingForm({ mode = 'add', finding = null, onSave, onCa
       </div>
 
       <form onSubmit={handleSubmit} className="p-6">
+        {Object.keys(errors).length > 0 && (
+          <div role="alert" className="mb-6 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-xs font-semibold text-red-700">
+            Gagal menyimpan. Periksa kembali isian berikut: {Object.keys(errors).join(', ')}.
+          </div>
+        )}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="space-y-4">
             <h3 className="font-bold text-slate-800 border-b pb-2">Informasi Umum</h3>
@@ -64,6 +69,7 @@ export default function FindingForm({ mode = 'add', finding = null, onSave, onCa
                 className="mt-1 block w-full"
                 placeholder="FND-0001"
               />
+              <InputError message={errors.finding_number} className="mt-1" />
             </div>
 
             <div>
@@ -119,6 +125,7 @@ export default function FindingForm({ mode = 'add', finding = null, onSave, onCa
                 <option value="minor">Minor</option>
                 <option value="pi">PI (Opportunity for Improvement)</option>
               </select>
+              <InputError message={errors.finding_type} className="mt-1" />
             </div>
           </div>
 
@@ -217,20 +224,22 @@ export default function FindingForm({ mode = 'add', finding = null, onSave, onCa
           </div>
         </div>
 
-        <div className="mt-8 flex items-center justify-end gap-3 pt-6 border-t border-gray-100">
+        <div className="mt-8 flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-end gap-3 pt-6 border-t border-gray-100">
           <button
             type="button"
             onClick={onCancel}
-            className="px-5 py-2.5 text-sm font-semibold text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition"
+            disabled={isSubmitting}
+            className="px-5 py-2.5 text-sm font-semibold text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition disabled:opacity-50"
           >
             Batal
           </button>
           <button
             type="submit"
-            className="px-5 py-2.5 text-sm font-semibold text-white bg-[#00838F] rounded-lg hover:bg-[#007A87] transition flex items-center gap-2"
+            disabled={isSubmitting}
+            className="px-5 py-2.5 text-sm font-semibold text-white bg-[#00838F] rounded-lg hover:bg-[#007A87] transition flex items-center justify-center gap-2 disabled:opacity-60"
           >
-            <Save className="w-4 h-4" />
-            {mode === 'add' ? 'Simpan Data' : 'Simpan Perubahan'}
+            <Save className="w-4 h-4" aria-hidden="true" />
+            {isSubmitting ? 'Menyimpan...' : mode === 'add' ? 'Simpan Data' : 'Simpan Perubahan'}
           </button>
         </div>
       </form>

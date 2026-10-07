@@ -50,7 +50,9 @@ export default function MainDashboard({ stats = { standardCount: 0, certificateC
           <div className="absolute inset-0 bg-slate-900">
             <img
               src={heroSlides[currentSlide].image}
-              alt="PLN Field Worker"
+              alt={t('home.heroImageAlt')}
+              loading={currentSlide === 0 ? 'eager' : 'lazy'}
+              onError={(e) => { e.currentTarget.src = '/images/hero_bg.png'; }}
               className="w-full h-full object-cover object-center opacity-40 mix-blend-overlay scale-105 transition-all duration-700"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-900/60 to-slate-950/70" />
@@ -60,7 +62,7 @@ export default function MainDashboard({ stats = { standardCount: 0, certificateC
           <button
             onClick={handlePrevSlide}
             className="absolute left-4 sm:left-6 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-white flex items-center justify-center hover:bg-white/25 active:scale-90 transition-all z-20 cursor-pointer"
-            aria-label="Slide Sebelumnya"
+            aria-label={t('home.sliderPrev')}
           >
             <ChevronLeft className="w-6 h-6" />
           </button>
@@ -68,7 +70,7 @@ export default function MainDashboard({ stats = { standardCount: 0, certificateC
           <button
             onClick={handleNextSlide}
             className="absolute right-4 sm:right-6 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-white flex items-center justify-center hover:bg-white/25 active:scale-90 transition-all z-20 cursor-pointer"
-            aria-label="Slide Selanjutnya"
+            aria-label={t('home.sliderNext')}
           >
             <ChevronRight className="w-6 h-6" />
           </button>
@@ -237,7 +239,7 @@ export default function MainDashboard({ stats = { standardCount: 0, certificateC
             <Link href="/standar"
               className="text-cyan-600 font-semibold text-xs hover:underline cursor-pointer"
             >
-              Lihat Semua →
+              {t('home.viewAll')}
             </Link>
           </div>
         </section>
@@ -247,7 +249,7 @@ export default function MainDashboard({ stats = { standardCount: 0, certificateC
         {/* ========================================================= */}
         <section className="max-w-7xl mx-auto px-4 sm:px-8 space-y-6">
           <h2 className="text-2xl font-bold text-center text-slate-800 mb-8">
-            Sertifikat Yang Telah Diperoleh
+            {t('home.certTitle')}
           </h2>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -285,7 +287,7 @@ export default function MainDashboard({ stats = { standardCount: 0, certificateC
               ))}
               {recentCertificates.length === 0 && (
                 <div className="col-span-3 text-center py-12 text-slate-500 font-medium">
-                  Belum ada sertifikat.
+                  {t('home.emptyCerts')}
                 </div>
               )}
           </div>
@@ -294,7 +296,7 @@ export default function MainDashboard({ stats = { standardCount: 0, certificateC
             <Link href="/sertifikat"
               className="text-cyan-600 font-semibold text-xs hover:underline cursor-pointer"
             >
-              Lihat Semua →
+              {t('home.viewAll')}
             </Link>
           </div>
         </section>

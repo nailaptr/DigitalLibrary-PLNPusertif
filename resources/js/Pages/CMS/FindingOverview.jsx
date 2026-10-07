@@ -28,9 +28,9 @@ export default function FindingOverview({ auth, stats }) {
               </p>
             </div>
 
-            <div className="flex items-center gap-3">
-              <button className="flex items-center gap-2 bg-white border border-gray-200 text-xs font-semibold text-slate-700 px-3.5 py-2 rounded-lg hover:bg-slate-50 transition shadow-2xs">
-                <Calendar className="w-4 h-4 text-[#00A2B9]" />
+            <div className="flex flex-wrap items-center gap-3">
+              <button type="button" title={new Date().toLocaleDateString('id-ID', { year: 'numeric', month: 'short', day: 'numeric' })} aria-label={`Tanggal hari ini: ${new Date().toLocaleDateString('id-ID', { year: 'numeric', month: 'short', day: 'numeric' })}`} className="flex items-center gap-2 bg-white border border-gray-200 text-xs font-semibold text-slate-700 px-3.5 py-2 rounded-lg hover:bg-slate-50 transition shadow-2xs whitespace-nowrap focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#00A2B9] cursor-default">
+                <Calendar className="w-4 h-4 text-[#00A2B9]" aria-hidden="true" />
                 <span>{new Date().toLocaleDateString('id-ID', { year: 'numeric', month: 'short', day: 'numeric' })}</span>
               </button>
             </div>

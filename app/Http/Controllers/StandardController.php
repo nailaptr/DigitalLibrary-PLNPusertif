@@ -10,9 +10,13 @@ use Inertia\Inertia;
 class StandardController extends Controller
 {
 
-    public function index()
+    public function index(Request $request)
     {
-        $standards = Standard::withCount('documents')->get()->map(function ($std) {
+        $search = $request->validate(['search' => 'nullable|string|max:100'])['search'] ?? null;
+
+        $standards = Standard::withCount('documents')
+            ->when($search, fn($q) => $q->where(fn($w) => $w->where('name', 'like', "%{$search}%")->orWhere('description', 'like', "%{$search}%")))
+            ->get()->map(function ($std) {
             return [
                 'id' => $std->id, // Frontend uses 'id'
                 'name' => $std->name,
@@ -30,7 +34,8 @@ class StandardController extends Controller
         // Wait, the UI has it hardcoded, I will leave documents mock intact for now.
         
         return Inertia::render('CMS/StandardManagement', [
-            'initialStandards' => $standards
+            'initialStandards' => $standards,
+            'filters' => ['search' => $search],
         ]);
     }
 

@@ -7,7 +7,7 @@ import StandardModal from '@/Components/Standard/StandardModal';
 import DocumentTable from '@/Components/Standard/DocumentTable';
 import DocumentModal from '@/Components/Standard/DocumentModal';
 
-export default function StandardManagement({ onNavigate, initialStandards = [] }) {
+export default function StandardManagement({ onNavigate, initialStandards = [], filters = {} }) {
   const [activeMenu, setActiveMenu] = useState('Standar');
 
   // Navigation Level State: 'level1' (Standard Cards) | 'level2' (Document Table)
@@ -133,6 +133,7 @@ export default function StandardManagement({ onNavigate, initialStandards = [] }
       <main className="flex-1 p-6 lg:p-8 overflow-y-auto min-h-screen">
         {level === 'level1' ? (
           <StandardCardGrid
+            initialSearch={filters.search || ''}
             standards={standards}
             onOpenAddModal={handleOpenAddStandard}
             onOpenEditModal={handleOpenEditStandard}

@@ -68,6 +68,7 @@ class DocumentController extends Controller
             'standard_ids' => 'required|array',
             'standard_ids.*' => 'exists:standards,id',
             'primary_standard_id' => 'required|exists:standards,id',
+            'status' => 'nullable|in:relevan,tidak_relevan',
             'file' => 'nullable|file|mimes:pdf,doc,docx,xls,xlsx|max:20480', // max 20MB
         ]);
 
@@ -80,7 +81,7 @@ class DocumentController extends Controller
             'notes' => $validated['notes'],
             'upload_date' => $validated['upload_date'],
             'uploaded_by' => auth()->id(),
-            'status' => 'relevan', // Default per PRD
+            'status' => $validated['status'] ?? 'relevan', // Default per PRD
         ];
 
         if ($request->hasFile('file')) {
@@ -118,6 +119,7 @@ class DocumentController extends Controller
             'standard_ids' => 'required|array',
             'standard_ids.*' => 'exists:standards,id',
             'primary_standard_id' => 'required|exists:standards,id',
+            'status' => 'nullable|in:relevan,tidak_relevan',
             'file' => 'nullable|file|mimes:pdf,doc,docx,xls,xlsx|max:20480',
         ]);
 
@@ -129,6 +131,7 @@ class DocumentController extends Controller
             'sub_clause' => $validated['sub_clause'],
             'notes' => $validated['notes'],
             'upload_date' => $validated['upload_date'],
+            'status' => $validated['status'] ?? $document->status,
         ];
 
         if ($request->hasFile('file')) {

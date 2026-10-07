@@ -1,10 +1,22 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import Sidebar from '@/Components/Sidebar';
-import { History } from 'lucide-react';
+import { History, Search, X } from 'lucide-react';
 
 export default function ActivityLog({ onNavigate, logs = [] }) {
   const [activeMenu, setActiveMenu] = useState('Log Aktivitas');
+  const [query, setQuery] = useState('');
+
+  const filteredLogs = useMemo(() => {
+    const q = query.trim().toLowerCase();
+    if (!q) return logs;
+    return logs.filter((log) =>
+      log.user_name?.toLowerCase().includes(q) ||
+      log.action?.toLowerCase().includes(q) ||
+      log.entity?.toLowerCase().includes(q) ||
+      (typeof log.details === 'string' ? log.details : JSON.stringify(log.details ?? '')).toLowerCase().includes(q)
+    );
+  }, [logs, query]);
 
   const handleSidebarMenuSelect = (menuName) => {
     setActiveMenu(menuName);
@@ -30,14 +42,32 @@ export default function ActivityLog({ onNavigate, logs = [] }) {
           </div>
 
           <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
-            <div className="flex flex-col lg:flex-row items-center justify-between gap-4 p-5 border-b border-gray-100">
-              <div className="relative w-full lg:w-72">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-5 border-b border-gray-100">
+              <div className="relative w-full sm:w-72">
+                <Search className="w-4 h-4 text-gray-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" aria-hidden="true" />
+                <label htmlFor="activitylog-search" className="sr-only">Cari log aktivitas</label>
                 <input
-                  type="text"
+                  id="activitylog-search"
+                  type="search"
                   placeholder="Cari Log..."
-                  className="w-full px-4 py-2 text-xs border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#00838F] bg-white font-medium text-slate-700 shadow-2xs"
+                  value={query}
+                  onChange={(e) => setQuery(e.target.value)}
+                  className="w-full pl-10 pr-9 py-2 text-xs border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#00838F] focus:border-transparent bg-white font-medium text-slate-700 shadow-2xs placeholder-gray-400"
                 />
+                {query && (
+                  <button
+                    type="button"
+                    onClick={() => setQuery('')}
+                    aria-label="Bersihkan pencarian"
+                    className="absolute right-2.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 p-0.5 rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#00838F]"
+                  >
+                    <X className="w-3.5 h-3.5" aria-hidden="true" />
+                  </button>
+                )}
               </div>
+              <p className="text-xs text-slate-500 font-medium" aria-live="polite">
+                Menampilkan {filteredLogs.length} dari {logs.length} log
+              </p>
             </div>
 
             <div className="overflow-x-auto p-5">
@@ -52,7 +82,7 @@ export default function ActivityLog({ onNavigate, logs = [] }) {
                   </tr>
                 </thead>
                 <tbody className="text-xs">
-                  {logs.length > 0 ? logs.map((log) => (
+                  {filteredLogs.length > 0 ? filteredLogs.map((log) => (
                     <tr key={log.id} className="bg-white hover:bg-slate-50/50 shadow-sm border border-gray-100 rounded-xl transition-all">
                       <td className="px-6 py-4 whitespace-nowrap text-slate-600">{log.created_at}</td>
                       <td className="px-6 py-4 whitespace-nowrap font-medium text-slate-800">{log.user_name}</td>
@@ -72,7 +102,7 @@ export default function ActivityLog({ onNavigate, logs = [] }) {
                   )) : (
                     <tr>
                       <td colSpan="5" className="px-6 py-8 text-center text-slate-500">
-                        Belum ada catatan aktivitas.
+                        {query ? 'Tidak ada log yang cocok dengan pencarian.' : 'Belum ada catatan aktivitas.'}
                       </td>
                     </tr>
                   )}
